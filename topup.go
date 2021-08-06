@@ -13,5 +13,4 @@ type TopUp struct {
 	Updated_At 		time.Time	`json:"updated_at"`
 
 func topupPayment() {
-	
 }
