@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"ticketing/controller/cAuth"
 	"ticketing/controller/cMovie"
 	"ticketing/controller/cTheater"
 	"ticketing/controller/cTickets"
@@ -29,8 +30,8 @@ func main() {
 	http.HandleFunc("/theater", cTheater.GetTheater)
 
 	//! AUTH
-	http.HandleFunc("/login", cUsers.Login)
-	http.HandleFunc("/register", cUsers.Register)
+	http.HandleFunc("/login", cAuth.Login)
+	http.HandleFunc("/register", cAuth.Register)
 
 	http.ListenAndServe(":8000", nil)
 }
