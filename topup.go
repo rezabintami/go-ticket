@@ -1,9 +1,16 @@
 package topup
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
+
+type TopUp struct {
+	ID				int			`json:"id"`
+	User_ID 		int			`json:"user_id"`
+	Balance 		float64		`json:"balance"`
+	Created_At 		time.Time	`json:"created_at"`
+	Updated_At 		time.Time	`json:"updated_at"`
 
 func topupPayment() {
-	fmt.Println("topup ovo 1000")
-	fmt.Println("topup ovo 2000")
-	fmt.Println("topup gojek 1000")
 }
