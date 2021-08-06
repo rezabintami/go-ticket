@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"ticketing/controller/cMovie"
 	"ticketing/controller/cTickets"
 	"ticketing/controller/cTopup"
 	"ticketing/controller/cUsers"
@@ -15,9 +16,12 @@ func main() {
 	http.HandleFunc("/users", cUsers.GetProfile)
 	http.HandleFunc("/users", cUsers.UpdateProfile)
 
-	//! Ticket
+	//! TICKETS
 	http.HandleFunc("/tickets", cTickets.PostTicket)
 	http.HandleFunc("/tickets", cTickets.CancelTicket)
+
+	//! MOVIE
+	http.HandleFunc("/movie", cMovie.GetMovies)
 
 	//! AUTH
 	http.HandleFunc("/login", cUsers.Login)
