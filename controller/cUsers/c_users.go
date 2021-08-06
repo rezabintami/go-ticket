@@ -4,6 +4,10 @@ func Login() {
 
 }
 
+func Register() {
+
+}
+
 func UpdateProfile() {
 
 }
