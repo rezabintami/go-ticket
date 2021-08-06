@@ -1,0 +1,325 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Ticketing API
+
+paths:
+  #! Login
+  /login:
+    post:
+      tags:
+        - Login
+      summary: login
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Login
+          schema:
+            $ref: "#/definitions/Login"
+      responses:
+        201:
+          description: login success
+        400:
+          description: login failed
+        409:
+          description: an existing item already exists
+  #! Register
+  /register:
+    post:
+      tags:
+        - Register
+      summary: register
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Register
+          schema:
+            $ref: "#/definitions/Register"
+      responses:
+        201:
+          description: register success
+        400:
+          description: register failed
+        409:
+          description: an existing item already exists
+  #! TopUp
+  /topup:
+    post:
+      tags:
+        - TopUp
+      summary: topup
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Topup
+          schema:
+            $ref: "#/definitions/TopUp"
+      responses:
+        201:
+          description: topup success
+        400:
+          description: topup failed
+        409:
+          description: an existing item already exists
+    #! Ticket
+  /ticket:
+    #! Create Ticket
+    post:
+      tags:
+        - Create Ticket
+      summary: create ticket
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: create ticket
+          schema:
+            $ref: "#/definitions/Tickets"
+      responses:
+        201:
+          description: topup success
+        400:
+          description: topup failed
+        409:
+          description: an existing item already exists
+    #! Delete Ticket
+  /ticket/{ticket_id}:
+    delete:
+      tags:
+        - Delete Ticket
+      summary: delete ticket
+      parameters:
+        - in: path
+          required: true
+          name: "ticket_id"
+          type: string
+      responses:
+        200:
+          description: delete success
+        400:
+          description: delete failed
+  #! Get Movies
+  /movies:
+    get:
+      tags:
+        - Get Movies
+      summary: get movies
+      responses:
+        200:
+          description: get movies
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Movies"
+        400:
+          description: bad input parameter
+    #! Get Theater
+  /theater:
+    get:
+      tags:
+        - Get Theater
+      summary: get theater
+      responses:
+        200:
+          description: get theater
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Theater"
+        400:
+          description: bad input parameter
+    #! Create Theater
+    post:
+      tags:
+        - Create Theater
+      summary: create theater
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Topup
+          schema:
+            $ref: "#/definitions/CreateTheater"
+      responses:
+        200:
+          description: create theater success
+        400:
+          description: create theater failed
+  #! Profile
+  /users:
+    #! Get Profile
+    get:
+      tags:
+        - Get Profile
+      summary: get profile
+      responses:
+        200:
+          description: get profile
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/GetProfile"
+        400:
+          description: bad input parameter
+    #! Update Profile
+    put:
+      tags:
+        - Update Profile
+      summary: update profile
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Update Profile
+          description: update profile
+          schema:
+            $ref: "#/definitions/Data"
+      responses:
+        201:
+          description: item update
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists
+definitions:
+  GetProfile:
+    type: object
+    required:
+      - meta
+      - data
+    properties:
+      meta:
+        $ref: "#/definitions/Meta"
+      data:
+        $ref: "#/definitions/Data"
+  Data:
+    properties:
+      id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: reza
+      email:
+        type: string
+        example: reza@gmail.com
+      balance:
+        type: number
+        example: 120000.00
+      language:
+        type: string
+        example: in
+  Meta:
+    properties:
+      error_message:
+        type: string
+        example: Need Login First
+  Login:
+    properties:
+      email:
+        type: string
+        example: reza@gmail.com
+      password:
+        type: string
+        example: sh8hs82ldao21d
+  Register:
+    properties:
+      name:
+        type: string
+        example: reza
+      email:
+        type: string
+        example: reza@gmail.com
+      balance:
+        type: number
+        example: 0.00
+      language:
+        type: string
+        example: in
+  TopUp:
+    properties:
+      user_id:
+        type: number
+        example: 1
+      balance:
+        type: number
+        example: 120000
+
+  Tickets:
+    properties:
+      booking_code:
+        type: string
+        example: ABC123
+      movie_id:
+        type: integer
+        example: 2386
+      user_id:
+        type: integer
+        example: 2
+      theater_id:
+        type: integer
+        example: 2
+      seats:
+        type: string
+        example: A8
+      total_price:
+        type: number
+        example: 120000.00
+      time:
+        type: string
+        format: date-time
+        example: 2016-08-29T09:12:33.001Z
+
+  Movies:
+    properties:
+      id:
+        type: integer
+        example: 231
+      original_title:
+        type: string
+        example: Jungle Cruise
+      original_language:
+        type: string
+        example: en
+      overview:
+        type: string
+        example: Dr. Lily Houghton enlists the aid of wisecracking skipper Frank Wolff to take her down the Amazon in his dilapidated boat. Together, they search for an ancient tree that holds the power to heal – a discovery that will change the future of medicine.
+      poster_path:
+        type: string
+        example: /9dKCd55IuTT5QRs989m9Qlb7d2B.jpg
+      vote_average:
+        type: number
+        example: 8.1
+      vote_count:
+        type: integer
+        example: 1048
+
+  Theater:
+    properties:
+      id:
+        type: integer
+        example: 23
+      name:
+        type: string
+        example: CGV Surabaya
+      place:
+        type: string
+        example: Surabaya
+  CreateTheater:
+    properties:
+      name:
+        type: string
+        example: CGV Surabaya
+      place:
+        type: string
+        example: Surabaya
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /rezabintami/ticketing/1.0.0
+schemes:
+  - https

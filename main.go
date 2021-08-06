@@ -23,7 +23,7 @@ func main() {
 	http.HandleFunc("/tickets", cTickets.CancelTicket)
 
 	//! MOVIE
-	http.HandleFunc("/movie", cMovie.GetMovies)
+	http.HandleFunc("/movies", cMovie.GetMovies)
 
 	//! THEATER
 	http.HandleFunc("/theater", cTheater.CreateTheater)
