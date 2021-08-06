@@ -13,4 +13,5 @@ type Tickets struct {
 	Time        time.Time `json:"time"`
 	Created_At  time.Time `json:"created_at"`
 	Updated_At  time.Time `json:"updated_at"`
+	Deleted_At  time.Time `json:"deleted_at"`
 }
