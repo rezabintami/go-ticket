@@ -65,7 +65,7 @@ paths:
         409:
           description: an existing item already exists
     #! Ticket
-  /ticket:
+  /tickets:
     #! Create Ticket
     post:
       tags:
@@ -86,7 +86,7 @@ paths:
         409:
           description: an existing item already exists
     #! Delete Ticket
-  /ticket/{ticket_id}:
+  /tickets/{ticket_id}:
     delete:
       tags:
         - Delete Ticket
