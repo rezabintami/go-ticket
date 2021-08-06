@@ -21,6 +21,7 @@ func main() {
 
 	//! AUTH
 	http.HandleFunc("/login", cUsers.Login)
+	http.HandleFunc("/register", cUsers.Register)
 
 	http.ListenAndServe(":8000", nil)
 }
