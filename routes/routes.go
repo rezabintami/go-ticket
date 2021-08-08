@@ -3,6 +3,8 @@ package routes
 import (
 	"ticketing/controllers/cAuth"
 	"ticketing/controllers/cTheater"
+	"ticketing/controllers/cUsers"
+
 	// "ticketing/controllers/cMovie"
 	// "ticketing/controllers/cTheater"
 	// "ticketing/controllers/cTickets"
@@ -18,8 +20,8 @@ func InitServer() *echo.Echo {
 	// router.POST("/topup", cTopup.PostTopUpPayment)
 
 	// //! USERS
-	// router.GET("/users", cUsers.GetProfile)
-	// router.PUT("/users", cUsers.UpdateProfile)
+	router.GET("/users/:id", cUsers.GetProfile)
+	router.PUT("/users/", cUsers.UpdateProfile)
 
 	// //! TICKETS
 	// router.POST("/tickets", cTickets.PostTicket)
