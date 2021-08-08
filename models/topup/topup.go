@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type TopUp struct {
+type Topup struct {
 	ID         int       `json:"id"`
 	User_ID    int       `json:"user_id"`
 	Balance    float64   `json:"balance"`

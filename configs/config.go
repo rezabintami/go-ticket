@@ -15,8 +15,8 @@ import (
 var DB *gorm.DB
 
 const (
-	MysqlDsn = `root:@/ticketing?parseTime=True&charset=utf8`
-	// MysqlDsn = `root:@/ticketing@tcp(127.0.0.1:3306)/amartha?charset=utf8mb4&parseTime=True&loc=Local`
+	// MysqlDsn = `root:@/ticketing@tcp(127.0.0.1:3307)?parseTime=True&charset=utf8`
+	MysqlDsn = `root:@tcp(127.0.0.1:3307)/ticketing?charset=utf8mb4&parseTime=True&loc=Local`
 )
 
 func InitDB() {
@@ -30,5 +30,5 @@ func InitDB() {
 }
 
 func Migrate() {
-	DB.AutoMigrate(&users.Users{}, &topup.TopUp{}, &tickets.Tickets{}, &theater.Theater{}, &movies.Movie{})
+	DB.AutoMigrate(&users.Users{}, &topup.Topup{}, &tickets.Tickets{}, &theater.Theater{}, &movies.Movie{})
 }
