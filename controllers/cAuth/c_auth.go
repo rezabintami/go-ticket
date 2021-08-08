@@ -6,6 +6,7 @@ import (
 	"ticketing/helper"
 	"ticketing/models/auth"
 	"ticketing/models/users"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -28,7 +29,7 @@ func Register(ctx echo.Context) error {
 	users.Password = helper.HashGenerator(register.Password)
 	users.Balance = register.Balance
 	users.Language = register.Language
-
+	users.Created_At = time.Now()
 	result := configs.DB.Create(&users)
 	if result.Error != nil {
 		response := helper.APIResponse("register failed", http.StatusInternalServerError, "failed", nil)
