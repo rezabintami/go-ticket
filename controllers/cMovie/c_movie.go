@@ -1,4 +1,0 @@
-package cMovie
-
-func GetMovies() {
-}
