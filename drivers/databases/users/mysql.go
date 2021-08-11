@@ -17,9 +17,31 @@ func NewMySQLUserRepository(conn *gorm.DB) users.Repository {
 	}
 }
 
-func (repository *mysqlUsersRepository) Login(ctx context.Context, email, password string) (users.Domain, error) {
+func (repository *mysqlUsersRepository) GetByID(ctx context.Context, id int) (users.UserDomain, error) {
+	usersById := Users{}
+	result := repository.Conn.Where("id = ?", id).First(&usersById)
+	if result.Error != nil {
+		return users.UserDomain{}, result.Error
+	}
+	return usersById.toUserDomain(), nil
+}
+
+func (repository *mysqlUsersRepository) UpdateUser(ctx context.Context, userDomain *users.Domain, id int) error {
+	usersUpdate := Users{}
+	usersUpdate.Name = userDomain.Name
+	usersUpdate.Email = userDomain.Email
+	usersUpdate.Language = userDomain.Language
+	result := repository.Conn.Where("id = ?", id).Updates(&usersUpdate)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
+
+func (repository *mysqlUsersRepository) Login(ctx context.Context, id int) (users.Domain, error) {
 	userLogin := Users{}
-	result := repository.Conn.Where("email = ? AND password = ?", email, password).First(&userLogin)
+	result := repository.Conn.Where("id = ?", id).First(&userLogin)
 	if result.Error != nil {
 		return users.Domain{}, result.Error
 	}

@@ -23,7 +23,7 @@ func FromDomain(userDomain users.Domain) Users {
 		Password:   userDomain.Password,
 		Email:      userDomain.Email,
 		Language:   userDomain.Language,
-		Created_At: userDomain.Created_At,
-		Updated_At: userDomain.Updated_At,
+		Created_At: userDomain.CreatedAt,
+		Updated_At: userDomain.UpdatedAt,
 	}
 }

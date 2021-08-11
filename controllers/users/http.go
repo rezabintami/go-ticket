@@ -2,6 +2,7 @@ package users
 
 import (
 	"net/http"
+	"strconv"
 	"ticketing/business/users"
 	"ticketing/controllers/users/request"
 	"ticketing/helper/response"
@@ -47,5 +48,32 @@ func (controller *UserController) Login(c echo.Context) error {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
+	return response.NewSuccessResponse(c, user)
+}
+
+func (controller *UserController) GetProfile(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	user, err := controller.userUseCase.GetByID(c.Request().Context(), id)
+	if err != nil {
+		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	return response.NewSuccessResponse(c, user)
+}
+
+func (controller *UserController) UpdateProfile(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	req := request.Users{}
+	if err := c.Bind(&req); err != nil {
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+	err := controller.userUseCase.UpdateUser(c.Request().Context(), req.ToDomain(), id)
+	if err != nil {
+		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+	user, err := controller.userUseCase.GetByID(c.Request().Context(), id)
+	if err != nil {
+		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
 	return response.NewSuccessResponse(c, user)
 }
