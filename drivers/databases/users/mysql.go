@@ -31,6 +31,7 @@ func (repository *mysqlUsersRepository) UpdateUser(ctx context.Context, userDoma
 	usersUpdate.Name = userDomain.Name
 	usersUpdate.Email = userDomain.Email
 	usersUpdate.Language = userDomain.Language
+	usersUpdate.Balance = userDomain.Balance
 	result := repository.Conn.Where("id = ?", id).Updates(&usersUpdate)
 	if result.Error != nil {
 		return result.Error

@@ -1,11 +1,11 @@
-package topup
+package response
 
 import (
 	"ticketing/business/topup"
 	"time"
 )
 
-type Topup struct {
+type TopUp struct {
 	ID        int       `json:"id"`
 	User_ID   int       `json:"user_id"`
 	Name      string    `json:"name"`
@@ -14,23 +14,11 @@ type Topup struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (rec *Topup) toDomain() topup.Domain {
-	return topup.Domain{
-		ID:        rec.ID,
-		User_ID:   rec.User_ID,
-		Name:      rec.Name,
-		Balance:   rec.Balance,
-		CreatedAt: rec.CreatedAt,
-		UpdatedAt: rec.UpdatedAt,
-	}
-}
-
-func fromDomain(topupDomain topup.Domain) *Topup {
-	return &Topup{
+func FromDomain(topupDomain topup.Domain) TopUp {
+	return TopUp{
 		ID:        topupDomain.ID,
-		User_ID:   topupDomain.User_ID,
 		Name:      topupDomain.Name,
-		Balance:   topupDomain.Balance,
+		User_ID:   topupDomain.User_ID,
 		CreatedAt: topupDomain.CreatedAt,
 		UpdatedAt: topupDomain.UpdatedAt,
 	}

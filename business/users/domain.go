@@ -25,7 +25,7 @@ type UserDomain struct {
 	Language string  `json:"language"`
 }
 
-type UseCase interface {
+type Usecase interface {
 	Login(ctx context.Context, email, password string) (Domain, error)
 	Register(ctx context.Context, data *Domain) error
 	GetByID(ctx context.Context, id int) (UserDomain, error)

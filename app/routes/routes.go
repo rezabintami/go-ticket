@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"ticketing/controllers/topup"
 	"ticketing/controllers/users"
 
 	echo "github.com/labstack/echo/v4"
@@ -8,15 +9,16 @@ import (
 )
 
 type ControllerList struct {
-	JWTMiddleware  middleware.JWTConfig
-	UserController users.UserController
+	JWTMiddleware   middleware.JWTConfig
+	UserController  users.UserController
+	TopUpController topup.TopUpController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	// users := e.Group("users")
 
 	// //! TOPUP
-	// router.POST("/topup", cTopup.PostTopUpPayment)
+	e.POST("/topup", cl.TopUpController.PaymentTopUp, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	// //! USERS
 	e.GET("/users/:id", cl.UserController.GetProfile, middleware.JWTWithConfig(cl.JWTMiddleware))
