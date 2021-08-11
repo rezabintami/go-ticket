@@ -5,6 +5,10 @@ import (
 	_userController "ticketing/controllers/users"
 	_userRepo "ticketing/drivers/databases/users"
 
+	_topupUsecase "ticketing/business/topup"
+	_topupController "ticketing/controllers/topup"
+	_topupRepo "ticketing/drivers/databases/topup"
+
 	_dbDriver "ticketing/drivers/mysql"
 
 	_middleware "ticketing/app/middleware"
@@ -52,9 +56,15 @@ func main() {
 	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
 	userCtrl := _userController.NewUserController(userUsecase)
 
+	topupUserRepo := _userRepo.NewMySQLUserRepository(db)
+	topupRepo := _topupRepo.NewMySQLTopUpRepository(db)
+	topupUsecase := _topupUsecase.NewTopUpUsecase(topupRepo, timeoutContext, topupUserRepo)
+	topupCtrl := _topupController.NewTopUpController(topupUsecase)
+
 	routesInit := _routes.ControllerList{
-		JWTMiddleware:  configJWT.Init(),
-		UserController: *userCtrl,
+		JWTMiddleware:   configJWT.Init(),
+		UserController:  *userCtrl,
+		TopUpController: *topupCtrl,
 	}
 	routesInit.RouteRegister(e)
 
