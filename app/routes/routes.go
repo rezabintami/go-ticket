@@ -13,9 +13,29 @@ type ControllerList struct {
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
-	users := e.Group("users")
-	users.POST("/register", cl.UserController.Register)
-	users.POST("/login", cl.UserController.Login)
+	// users := e.Group("users")
+
+	// //! TOPUP
+	// router.POST("/topup", cTopup.PostTopUpPayment)
+
+	// //! USERS
+	e.GET("/users/:id", cl.UserController.GetProfile, middleware.JWTWithConfig(cl.JWTMiddleware))
+	e.PUT("/users/:id", cl.UserController.UpdateProfile, middleware.JWTWithConfig(cl.JWTMiddleware))
+
+	// //! TICKETS
+	// router.POST("/tickets", cTickets.PostTicket)
+	// router.DELETE("/tickets", cTickets.CancelTicket)
+
+	// //! MOVIE
+	// e.GET("/movies", cMovie.GetMovies)
+
+	// //! THEATER
+	// e.POST("/theater", cTheater.CreateTheater)
+	// e.GET("/theater", cTheater.GetTheater)
+
+	//! AUTH
+	e.POST("/register", cl.UserController.Register)
+	e.POST("/login", cl.UserController.Login)
 
 	// category := e.Group("category")
 	// category.GET("/list", cl.CategoryController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
