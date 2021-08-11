@@ -1,5 +1,0 @@
-package cTopup
-
-func PostTopUpPayment() {
-
-}
