@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type topupUsecase struct {
+type TopupUsecase struct {
 	topupRepository Repository
 	userRepository  users.Repository
 
@@ -14,14 +14,14 @@ type topupUsecase struct {
 }
 
 func NewTopUpUsecase(tr Repository, timeout time.Duration, us users.Repository) Usecase {
-	return &topupUsecase{
+	return &TopupUsecase{
 		topupRepository: tr,
 		contextTimeout:  timeout,
 		userRepository:  us,
 	}
 }
 
-func (tu *topupUsecase) Payment(ctx context.Context, topupDomain *Domain) error {
+func (tu *TopupUsecase) Payment(ctx context.Context, topupDomain *Domain) error {
 	err := tu.topupRepository.Payment(ctx, topupDomain)
 	if err != nil {
 		return err

@@ -9,21 +9,21 @@ import (
 	"time"
 )
 
-type UserUseCase struct {
+type UserUsecase struct {
 	userRepository Repository
 	contextTimeout time.Duration
 	jwtAuth        *middleware.ConfigJWT
 }
 
 func NewUserUsecase(ur Repository, jwtauth *middleware.ConfigJWT, timeout time.Duration) Usecase {
-	return &UserUseCase{
+	return &UserUsecase{
 		userRepository: ur,
 		jwtAuth:        jwtauth,
 		contextTimeout: timeout,
 	}
 }
 
-func (uc *UserUseCase) Login(ctx context.Context, email, password string) (Domain, error) {
+func (uc *UserUsecase) Login(ctx context.Context, email, password string) (Domain, error) {
 	existedUser, err := uc.userRepository.GetByEmail(ctx, email)
 	if err != nil {
 		if !strings.Contains(err.Error(), "not found") {
@@ -41,7 +41,7 @@ func (uc *UserUseCase) Login(ctx context.Context, email, password string) (Domai
 	return result, nil
 }
 
-func (uc *UserUseCase) GetByID(ctx context.Context, id int) (UserDomain, error) {
+func (uc *UserUsecase) GetByID(ctx context.Context, id int) (UserDomain, error) {
 	result, err := uc.userRepository.GetByID(ctx, id)
 	if err != nil {
 		return UserDomain{}, err
@@ -49,7 +49,7 @@ func (uc *UserUseCase) GetByID(ctx context.Context, id int) (UserDomain, error) 
 	return result, nil
 }
 
-func (uc *UserUseCase) UpdateUser(ctx context.Context, userDomain *Domain, id int) error {
+func (uc *UserUsecase) UpdateUser(ctx context.Context, userDomain *Domain, id int) error {
 	err := uc.userRepository.UpdateUser(ctx, userDomain, id)
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func (uc *UserUseCase) UpdateUser(ctx context.Context, userDomain *Domain, id in
 	return nil
 }
 
-func (uc *UserUseCase) Register(ctx context.Context, userDomain *Domain) error {
+func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain) error {
 	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 

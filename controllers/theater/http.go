@@ -1,34 +1,34 @@
-package users
+package theater
 
 import (
 	"net/http"
 	"strconv"
-	"ticketing/business/users"
-	"ticketing/controllers/users/request"
+	"ticketing/business/theater"
+	"ticketing/controllers/theater/request"
 	"ticketing/helper/response"
 
 	echo "github.com/labstack/echo/v4"
 )
 
-type UserController struct {
-	userUseCase users.Usecase
+type TheaterController struct {
+	theaterUsecase theater.Usecase
 }
 
-func NewUserController(uc users.Usecase) *UserController {
-	return &UserController{
-		userUseCase: uc,
+func NewTheaterController(tu theater.Usecase) *TheaterController {
+	return &TheaterController{
+		theaterUsecase: tu,
 	}
 }
 
-func (ctrl *UserController) Register(c echo.Context) error {
+func (ctrl *TheaterController) Store(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	req := request.Users{}
+	req := request.Theater{}
 	if err := c.Bind(&req); err != nil {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	err := ctrl.userUseCase.Register(ctx, req.ToDomain())
+	err := ctrl.theaterUsecase.Store(ctx, req.ToDomain())
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -36,44 +36,53 @@ func (ctrl *UserController) Register(c echo.Context) error {
 	return response.NewSuccessResponse(c, "Successfully inserted")
 }
 
-func (controller *UserController) Login(c echo.Context) error {
-	var userLogin request.Users
-	if err := c.Bind(&userLogin); err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
-	}
-
-	user, err := controller.userUseCase.Login(c.Request().Context(), userLogin.Email, userLogin.Password)
-
-	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
-	}
-
-	return response.NewSuccessResponse(c, user)
-}
-
-func (controller *UserController) GetProfile(c echo.Context) error {
+func (ctrl *TheaterController) Delete(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	user, err := controller.userUseCase.GetByID(c.Request().Context(), id)
-	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
-	}
+	ctx := c.Request().Context()
 
-	return response.NewSuccessResponse(c, user)
-}
-
-func (controller *UserController) UpdateProfile(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
-	req := request.Users{}
+	req := request.Theater{}
 	if err := c.Bind(&req); err != nil {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-	err := controller.userUseCase.UpdateUser(c.Request().Context(), req.ToDomain(), id)
+
+	err := ctrl.theaterUsecase.Delete(ctx, id)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
-	user, err := controller.userUseCase.GetByID(c.Request().Context(), id)
+
+	return response.NewSuccessResponse(c, "Delete Successfully")
+}
+
+func (ctrl *TheaterController) Update(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	ctx := c.Request().Context()
+
+	req := request.Theater{}
+	if err := c.Bind(&req); err != nil {
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	err := ctrl.theaterUsecase.Update(ctx, req.ToDomain(), id)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
-	return response.NewSuccessResponse(c, user)
+
+	return response.NewSuccessResponse(c, "Update Successfully")
+}
+
+func (ctrl *TheaterController) GetAll(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	req := request.Theater{}
+	if err := c.Bind(&req); err != nil {
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	result, err := ctrl.theaterUsecase.GetAll(ctx, req.ToDomain())
+	if err != nil {
+		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+	}
+
+	return response.NewSuccessResponse(c, result)
 }

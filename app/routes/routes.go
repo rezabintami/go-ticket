@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"ticketing/controllers/theater"
 	"ticketing/controllers/topup"
 	"ticketing/controllers/users"
 
@@ -9,9 +10,10 @@ import (
 )
 
 type ControllerList struct {
-	JWTMiddleware   middleware.JWTConfig
-	UserController  users.UserController
-	TopUpController topup.TopUpController
+	JWTMiddleware     middleware.JWTConfig
+	UserController    users.UserController
+	TopUpController   topup.TopUpController
+	TheaterController theater.TheaterController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -32,8 +34,10 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	// e.GET("/movies", cMovie.GetMovies)
 
 	// //! THEATER
-	// e.POST("/theater", cTheater.CreateTheater)
-	// e.GET("/theater", cTheater.GetTheater)
+	e.POST("/theater", cl.TheaterController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
+	e.PUT("/theater/:id", cl.TheaterController.Update, middleware.JWTWithConfig(cl.JWTMiddleware))
+	e.DELETE("/theater/:id", cl.TheaterController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware))
+	e.GET("/theater", cl.TheaterController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	//! AUTH
 	e.POST("/register", cl.UserController.Register)

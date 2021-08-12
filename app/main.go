@@ -5,6 +5,10 @@ import (
 	_userController "ticketing/controllers/users"
 	_userRepo "ticketing/drivers/databases/users"
 
+	_theaterUsecase "ticketing/business/theater"
+	_theaterController "ticketing/controllers/theater"
+	_theaterRepo "ticketing/drivers/databases/theater"
+
 	_topupUsecase "ticketing/business/topup"
 	_topupController "ticketing/controllers/topup"
 	_topupRepo "ticketing/drivers/databases/topup"
@@ -61,10 +65,15 @@ func main() {
 	topupUsecase := _topupUsecase.NewTopUpUsecase(topupRepo, timeoutContext, userRepo)
 	topupCtrl := _topupController.NewTopUpController(topupUsecase)
 
+	theaterRepo := _theaterRepo.NewMySQLTheaterRepository(db)
+	theaterUsecase := _theaterUsecase.NewTheaterUsecase(theaterRepo, timeoutContext)
+	theaterCtrl := _theaterController.NewTheaterController(theaterUsecase)
+
 	routesInit := _routes.ControllerList{
-		JWTMiddleware:   configJWT.Init(),
-		UserController:  *userCtrl,
-		TopUpController: *topupCtrl,
+		JWTMiddleware:     configJWT.Init(),
+		UserController:    *userCtrl,
+		TopUpController:   *topupCtrl,
+		TheaterController: *theaterCtrl,
 	}
 	routesInit.RouteRegister(e)
 
