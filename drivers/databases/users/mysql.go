@@ -27,11 +27,8 @@ func (repository *mysqlUsersRepository) GetByID(ctx context.Context, id int) (us
 }
 
 func (repository *mysqlUsersRepository) UpdateUser(ctx context.Context, userDomain *users.Domain, id int) error {
-	usersUpdate := Users{}
-	usersUpdate.Name = userDomain.Name
-	usersUpdate.Email = userDomain.Email
-	usersUpdate.Language = userDomain.Language
-	usersUpdate.Balance = userDomain.Balance
+	usersUpdate := fromDomain(*userDomain)
+
 	result := repository.Conn.Where("id = ?", id).Updates(&usersUpdate)
 	if result.Error != nil {
 		return result.Error
