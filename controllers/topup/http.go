@@ -14,15 +14,16 @@ type TopUpController struct {
 	topupUseCase topup.Usecase
 }
 
-func NewTopUpController(uc topup.Usecase) *TopUpController {
+func NewTopUpController(tc topup.Usecase) *TopUpController {
 	return &TopUpController{
-		topupUseCase: uc,
+		topupUseCase: tc,
 	}
 }
 
 func (ctrl *TopUpController) PaymentTopUp(c echo.Context) error {
 	ctx := c.Request().Context()
 	fmt.Println("start payment")
+
 	req := request.TopUp{}
 	if err := c.Bind(&req); err != nil {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)

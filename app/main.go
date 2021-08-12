@@ -56,9 +56,9 @@ func main() {
 	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
 	userCtrl := _userController.NewUserController(userUsecase)
 
-	topupUserRepo := _userRepo.NewMySQLUserRepository(db)
+	// topupUserRepo := _userRepo.NewMySQLUserRepository(db)
 	topupRepo := _topupRepo.NewMySQLTopUpRepository(db)
-	topupUsecase := _topupUsecase.NewTopUpUsecase(topupRepo, timeoutContext, topupUserRepo)
+	topupUsecase := _topupUsecase.NewTopUpUsecase(topupRepo, timeoutContext, userRepo)
 	topupCtrl := _topupController.NewTopUpController(topupUsecase)
 
 	routesInit := _routes.ControllerList{
