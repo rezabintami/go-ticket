@@ -1,6 +1,11 @@
 package main
 
 import (
+	_moviesUsecase "ticketing/business/movies"
+	_moviesController "ticketing/controllers/movies"
+	_moviesRepo "ticketing/drivers/databases/movies"
+	_movieDB "ticketing/drivers/thirdparties/moviedb"
+
 	_userUsecase "ticketing/business/users"
 	_userController "ticketing/controllers/users"
 	_userRepo "ticketing/drivers/databases/users"
@@ -69,11 +74,16 @@ func main() {
 	theaterUsecase := _theaterUsecase.NewTheaterUsecase(theaterRepo, timeoutContext)
 	theaterCtrl := _theaterController.NewTheaterController(theaterUsecase)
 
+	MovieDBRepo := _movieDB.NewFetchMovies()
+	moviesRepo := _moviesRepo.NewMySQLMoviesRepository(db)
+	moviesUsecase := _moviesUsecase.NewMoviesUsecase(moviesRepo, timeoutContext, MovieDBRepo)
+	moviesCtrl := _moviesController.NewMovieController(moviesUsecase)
 	routesInit := _routes.ControllerList{
 		JWTMiddleware:     configJWT.Init(),
 		UserController:    *userCtrl,
 		TopUpController:   *topupCtrl,
 		TheaterController: *theaterCtrl,
+		MoviesController:  *moviesCtrl,
 	}
 	routesInit.RouteRegister(e)
 

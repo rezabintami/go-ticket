@@ -2,7 +2,7 @@ package users
 
 import (
 	"net/http"
-	"strconv"
+	"ticketing/app/middleware"
 	"ticketing/business/users"
 	"ticketing/controllers/users/request"
 	"ticketing/helper/response"
@@ -52,7 +52,8 @@ func (controller *UserController) Login(c echo.Context) error {
 }
 
 func (controller *UserController) GetProfile(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id := middleware.GetUserId(c)
+	// id, _ := strconv.Atoi(c.Param("id"))
 	user, err := controller.userUseCase.GetByID(c.Request().Context(), id)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
@@ -62,7 +63,8 @@ func (controller *UserController) GetProfile(c echo.Context) error {
 }
 
 func (controller *UserController) UpdateProfile(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id := middleware.GetUserId(c)
+	// id, _ := strconv.Atoi(c.Param("id"))
 	req := request.Users{}
 	if err := c.Bind(&req); err != nil {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)
