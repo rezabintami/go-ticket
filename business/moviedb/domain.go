@@ -5,6 +5,7 @@ import "context"
 type Domain struct {
 	ID          int
 	Title       string
+	MovieID		int64
 	Language    string
 	Description string
 	Path        string

@@ -2,7 +2,6 @@ package movies
 
 import (
 	"context"
-	"fmt"
 	"ticketing/business/moviedb"
 	"time"
 )
@@ -21,28 +20,35 @@ func NewMoviesUsecase(mr Repository, timeout time.Duration, dbr moviedb.Reposito
 	}
 }
 
-func (mu *MoviesUsecase) Store(ctx context.Context, search string) error {
+func (mu *MoviesUsecase) Fetch(ctx context.Context, urlsearch string, search string) ([]Domain, error) {
 	//! Ambil Data Dari MOVIEDB
 	//! Taruh Dalam Array
 	//! Check Jika ada di DB
 	//! Store DB
-	result, err := mu.movieDBRepository.GetMovies(ctx, search)
+	result, err := mu.movieDBRepository.GetMovies(ctx, urlsearch)
 	if err != nil {
-		return err
+		return []Domain{}, err
 	}
-	fmt.Println(result)
 	for _, value := range result {
 		//! Check
-		err := mu.moviesRepository.Check(ctx, value.Title)
+		err := mu.moviesRepository.Check(ctx, value.MovieID)
 		if err != nil {
 			//! Store
-			go mu.moviesRepository.Store(ctx, &value)
+			mu.moviesRepository.Store(ctx, &value)
 		}
 	}
-	// err = mu.moviesRepository.CheckAndStoreMovies(ctx, result)
-	// if err != nil {
-	// 	return err
-	// }
-	// mu.moviesRepository.CheckMovies(ctx, result)
-	return nil
+	res, err := mu.moviesRepository.Search(ctx, search)
+	if err != nil {
+		return []Domain{}, err
+	}
+	return res, nil
+}
+
+
+func (mu *MoviesUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
+	result, err := mu.moviesRepository.GetByID(ctx, id)
+	if err != nil {
+		return Domain{}, err
+	}
+	return result, nil
 }

@@ -30,6 +30,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+
 func init() {
 	viper.SetConfigFile(`app/config.json`)
 	err := viper.ReadInConfig()
@@ -65,7 +66,6 @@ func main() {
 	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
 	userCtrl := _userController.NewUserController(userUsecase)
 
-	// topupUserRepo := _userRepo.NewMySQLUserRepository(db)
 	topupRepo := _topupRepo.NewMySQLTopUpRepository(db)
 	topupUsecase := _topupUsecase.NewTopUpUsecase(topupRepo, timeoutContext, userRepo)
 	topupCtrl := _topupController.NewTopUpController(topupUsecase)
@@ -78,6 +78,7 @@ func main() {
 	moviesRepo := _moviesRepo.NewMySQLMoviesRepository(db)
 	moviesUsecase := _moviesUsecase.NewMoviesUsecase(moviesRepo, timeoutContext, MovieDBRepo)
 	moviesCtrl := _moviesController.NewMovieController(moviesUsecase)
+	
 	routesInit := _routes.ControllerList{
 		JWTMiddleware:     configJWT.Init(),
 		UserController:    *userCtrl,
