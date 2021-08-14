@@ -20,7 +20,7 @@ import (
 
 type Response struct {
 	Result []struct {
-		ID          int     `json:"id"`
+		ID          int64   `json:"id"`
 		Title       string  `json:"original_title"`
 		Language    string  `json:"original_language"`
 		Description string  `json:"overview"`
@@ -34,6 +34,7 @@ func toDomain(resp Response) []moviedb.Domain {
 	movies := []moviedb.Domain{}
 	for _, value := range resp.Result {
 		mov := moviedb.Domain{
+			MovieID:     value.ID,
 			Title:       value.Title,
 			Language:    value.Language,
 			Description: value.Description,

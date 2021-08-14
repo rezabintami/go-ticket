@@ -18,6 +18,11 @@ type ControllerList struct {
 	MoviesController  movies.MovieController
 }
 
+//! GET MOVIES BY ID
+//! GET MOVIES BY LANGUAGE
+//! CREATE TICKET
+//! CANCEL TICKET
+
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	// users := e.Group("users")
 
@@ -34,6 +39,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 
 	// //! MOVIE
 	e.GET("/movies", cl.MoviesController.Fetch, middleware.JWTWithConfig(cl.JWTMiddleware))
+	e.GET("/movies/:id", cl.MoviesController.GetDetailMovies, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	// //! THEATER
 	e.POST("/theater", cl.TheaterController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
