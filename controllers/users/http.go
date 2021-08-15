@@ -11,12 +11,12 @@ import (
 )
 
 type UserController struct {
-	userUseCase users.Usecase
+	userUsecase users.Usecase
 }
 
 func NewUserController(uc users.Usecase) *UserController {
 	return &UserController{
-		userUseCase: uc,
+		userUsecase: uc,
 	}
 }
 
@@ -28,7 +28,7 @@ func (ctrl *UserController) Register(c echo.Context) error {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	err := ctrl.userUseCase.Register(ctx, req.ToDomain())
+	err := ctrl.userUsecase.Register(ctx, req.ToDomain())
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -44,7 +44,7 @@ func (controller *UserController) Login(c echo.Context) error {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	user, err := controller.userUseCase.Login(ctx, userLogin.Email, userLogin.Password)
+	user, err := controller.userUsecase.Login(ctx, userLogin.Email, userLogin.Password)
 
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
@@ -57,7 +57,7 @@ func (controller *UserController) GetProfile(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	id := middleware.GetUserId(c)
-	user, err := controller.userUseCase.GetByID(ctx, id)
+	user, err := controller.userUsecase.GetByID(ctx, id)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -73,11 +73,11 @@ func (controller *UserController) UpdateProfile(c echo.Context) error {
 	if err := c.Bind(&req); err != nil {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-	err := controller.userUseCase.UpdateUser(ctx, req.ToDomain(), id)
+	err := controller.userUsecase.UpdateUser(ctx, req.ToDomain(), id)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
-	user, err := controller.userUseCase.GetByID(ctx, id)
+	user, err := controller.userUsecase.GetByID(ctx, id)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
