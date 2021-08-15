@@ -19,18 +19,6 @@ func NewMySQLMoviesRepository(conn *gorm.DB) movies.Repository {
 }
 
 func (repository *mysqlMoviesRepository) Check(ctx context.Context, id int64) error {
-	// for _, value := range data {
-	// 	rec := fromDomain(value)
-	// 	movie := Movie{}
-	// 	result := repository.Conn.Where("title = ?", rec.Title).First(&movie)
-	// 	fmt.Println(result.Error)
-	// 	if result.Error != nil {
-	// 		result := repository.Conn.Create(rec)
-	// 		if result.Error != nil {
-	// 			return result.Error
-	// 		}
-	// 	}
-	// }
 	movie := Movie{}
 	result := repository.Conn.Where("movie_id = ?", id).First(&movie)
 	if result.Error != nil {
