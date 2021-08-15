@@ -37,12 +37,14 @@ func (ctrl *UserController) Register(c echo.Context) error {
 }
 
 func (controller *UserController) Login(c echo.Context) error {
+	ctx := c.Request().Context()
+
 	var userLogin request.Users
 	if err := c.Bind(&userLogin); err != nil {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	user, err := controller.userUseCase.Login(c.Request().Context(), userLogin.Email, userLogin.Password)
+	user, err := controller.userUseCase.Login(ctx, userLogin.Email, userLogin.Password)
 
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
@@ -52,9 +54,10 @@ func (controller *UserController) Login(c echo.Context) error {
 }
 
 func (controller *UserController) GetProfile(c echo.Context) error {
+	ctx := c.Request().Context()
+
 	id := middleware.GetUserId(c)
-	// id, _ := strconv.Atoi(c.Param("id"))
-	user, err := controller.userUseCase.GetByID(c.Request().Context(), id)
+	user, err := controller.userUseCase.GetByID(ctx, id)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -63,17 +66,18 @@ func (controller *UserController) GetProfile(c echo.Context) error {
 }
 
 func (controller *UserController) UpdateProfile(c echo.Context) error {
+	ctx := c.Request().Context()
+	
 	id := middleware.GetUserId(c)
-	// id, _ := strconv.Atoi(c.Param("id"))
 	req := request.Users{}
 	if err := c.Bind(&req); err != nil {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-	err := controller.userUseCase.UpdateUser(c.Request().Context(), req.ToDomain(), id)
+	err := controller.userUseCase.UpdateUser(ctx, req.ToDomain(), id)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
-	user, err := controller.userUseCase.GetByID(c.Request().Context(), id)
+	user, err := controller.userUseCase.GetByID(ctx, id)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}

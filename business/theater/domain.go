@@ -11,9 +11,9 @@ type Domain struct {
 	ID        int            `json:"id"`
 	Name      string         `json:"name"`
 	Place     string         `json:"place"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	CreatedAt time.Time      `json:"-"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `json:"-"`
 }
 
 type Usecase interface {

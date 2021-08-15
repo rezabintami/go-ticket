@@ -21,8 +21,8 @@ func NewTopUpUsecase(tr Repository, timeout time.Duration, us users.Repository) 
 	}
 }
 
-func (tu *TopupUsecase) Payment(ctx context.Context, topupDomain *Domain) error {
-	err := tu.topupRepository.Payment(ctx, topupDomain)
+func (tu *TopupUsecase) Store(ctx context.Context, topupDomain *Domain) error {
+	err := tu.topupRepository.Store(ctx, topupDomain)
 	if err != nil {
 		return err
 	}
@@ -37,3 +37,13 @@ func (tu *TopupUsecase) Payment(ctx context.Context, topupDomain *Domain) error 
 
 	return nil
 }
+
+func (tu *TopupUsecase) GetByID(ctx context.Context, id int) ([]Domain, error) {
+	result, err := tu.topupRepository.GetByID(ctx, id)
+	if err != nil {
+		return []Domain{}, err
+	}
+
+	return result, nil
+}
+

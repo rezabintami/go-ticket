@@ -10,13 +10,15 @@ type Domain struct {
 	User_ID   int       `json:"user_id"`
 	Name      string    `json:"name"`
 	Balance   float64   `json:"balance"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"-"`
+	UpdatedAt time.Time `json:"-"`
 }
 type Usecase interface {
-	Payment(ctx context.Context, data *Domain) error
+	Store(ctx context.Context, data *Domain) error
+	GetByID(ctx context.Context, id int) ([]Domain, error)
 }
 
 type Repository interface {
-	Payment(ctx context.Context, data *Domain) error
+	Store(ctx context.Context, data *Domain) error
+	GetByID(ctx context.Context, id int) ([]Domain, error)
 }

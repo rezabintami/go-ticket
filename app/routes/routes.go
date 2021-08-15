@@ -3,6 +3,7 @@ package routes
 import (
 	"ticketing/controllers/movies"
 	"ticketing/controllers/theater"
+	"ticketing/controllers/tickets"
 	"ticketing/controllers/topup"
 	"ticketing/controllers/users"
 
@@ -16,6 +17,7 @@ type ControllerList struct {
 	TopUpController   topup.TopUpController
 	TheaterController theater.TheaterController
 	MoviesController  movies.MovieController
+	TicketsController tickets.TicketsController
 }
 
 //! GET MOVIES BY ID
@@ -24,36 +26,32 @@ type ControllerList struct {
 //! CANCEL TICKET
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
-	// users := e.Group("users")
+	apiV1 := e.Group("/api/v1")
 
 	// //! TOPUP
-	e.POST("/topup", cl.TopUpController.PaymentTopUp, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.POST("/topup", cl.TopUpController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.GET("/topup", cl.TopUpController.GetByID, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	// //! USERS
-	e.GET("/users", cl.UserController.GetProfile, middleware.JWTWithConfig(cl.JWTMiddleware))
-	e.PUT("/users", cl.UserController.UpdateProfile, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.GET("/users", cl.UserController.GetProfile, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.PUT("/users", cl.UserController.UpdateProfile, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	// //! TICKETS
-	// router.POST("/tickets", cTickets.PostTicket)
-	// router.DELETE("/tickets", cTickets.CancelTicket)
+	apiV1.GET("/tickets", cl.TicketsController.GetByID, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.POST("/tickets", cl.TicketsController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.DELETE("/tickets/:id", cl.TicketsController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	// //! MOVIE
-	e.GET("/movies", cl.MoviesController.Fetch, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.GET("/movies", cl.MoviesController.Fetch, middleware.JWTWithConfig(cl.JWTMiddleware))
 	e.GET("/movies/:id", cl.MoviesController.GetDetailMovies, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	// //! THEATER
-	e.POST("/theater", cl.TheaterController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
-	e.PUT("/theater/:id", cl.TheaterController.Update, middleware.JWTWithConfig(cl.JWTMiddleware))
-	e.DELETE("/theater/:id", cl.TheaterController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware))
-	e.GET("/theater", cl.TheaterController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.POST("/theater", cl.TheaterController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.PUT("/theater/:id", cl.TheaterController.Update, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.DELETE("/theater/:id", cl.TheaterController.Delete, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.GET("/theater", cl.TheaterController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	//! AUTH
-	e.POST("/register", cl.UserController.Register)
-	e.POST("/login", cl.UserController.Login)
-
-	// category := e.Group("category")
-	// category.GET("/list", cl.CategoryController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
-
-	// news := e.Group("news")
-	// news.POST("/store", cl.NewsController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.POST("/register", cl.UserController.Register)
+	apiV1.POST("/login", cl.UserController.Login)
 }

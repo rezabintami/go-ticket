@@ -10,6 +10,10 @@ import (
 	_userController "ticketing/controllers/users"
 	_userRepo "ticketing/drivers/databases/users"
 
+	_ticketsUsecase "ticketing/business/tickets"
+	_ticketsController "ticketing/controllers/tickets"
+	_ticketsRepo "ticketing/drivers/databases/tickets"
+
 	_theaterUsecase "ticketing/business/theater"
 	_theaterController "ticketing/controllers/theater"
 	_theaterRepo "ticketing/drivers/databases/theater"
@@ -74,6 +78,10 @@ func main() {
 	theaterUsecase := _theaterUsecase.NewTheaterUsecase(theaterRepo, timeoutContext)
 	theaterCtrl := _theaterController.NewTheaterController(theaterUsecase)
 
+	ticketsRepo := _ticketsRepo.NewMySQLTicketsRepository(db)
+	ticketsUsecase := _ticketsUsecase.NewTicketsUsecase(ticketsRepo, timeoutContext)
+	ticketsCtrl := _ticketsController.NewTicketsController(ticketsUsecase)
+
 	MovieDBRepo := _movieDB.NewFetchMovies()
 	moviesRepo := _moviesRepo.NewMySQLMoviesRepository(db)
 	moviesUsecase := _moviesUsecase.NewMoviesUsecase(moviesRepo, timeoutContext, MovieDBRepo)
@@ -85,6 +93,7 @@ func main() {
 		TopUpController:   *topupCtrl,
 		TheaterController: *theaterCtrl,
 		MoviesController:  *moviesCtrl,
+		TicketsController: *ticketsCtrl,
 	}
 	routesInit.RouteRegister(e)
 

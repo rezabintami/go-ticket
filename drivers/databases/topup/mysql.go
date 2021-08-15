@@ -17,7 +17,7 @@ func NewMySQLTopUpRepository(conn *gorm.DB) topup.Repository {
 	}
 }
 
-func (repository *mysqlTopUpRepository) Payment(ctx context.Context, topupDomain *topup.Domain) error {
+func (repository *mysqlTopUpRepository) Store(ctx context.Context, topupDomain *topup.Domain) error {
 	rec := fromDomain(*topupDomain)
 
 	result := repository.Conn.Create(rec)
@@ -26,4 +26,17 @@ func (repository *mysqlTopUpRepository) Payment(ctx context.Context, topupDomain
 	}
 
 	return nil
+}
+
+func (repository *mysqlTopUpRepository) GetByID(ctx context.Context, id int) ([]topup.Domain, error) {
+	top := []Topup{}
+	result := repository.Conn.Where("user_id = ?", id).Find(&top)
+	if result.Error != nil {
+		return []topup.Domain{}, result.Error
+	}
+	var historyTopup []topup.Domain
+	for _, value := range top {
+		historyTopup = append(historyTopup, value.toDomain())
+	}
+	return historyTopup, nil
 }
