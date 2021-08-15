@@ -49,17 +49,3 @@ func (repository *mysqlTicketsRepository) GetByID(ctx context.Context, id int) (
 	}
 	return allTickets, nil
 }
-
-// func (repository *mysqlTheaterRepository) GetAll(ctx context.Context, theaterDomain *theater.Domain) ([]theater.Domain, error) {
-// 	var rec []Theater
-
-// 	result := repository.Conn.Find(&rec)
-// 	if result.Error != nil {
-// 		return []theater.Domain{}, result.Error
-// 	}
-// 	var allTheater []theater.Domain
-// 	for _, value := range rec {
-// 		allTheater = append(allTheater, value.toDomain())
-// 	}
-// 	return allTheater, nil
-// }
