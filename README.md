@@ -5,7 +5,7 @@
 `POST :`
 
 ```sh
-https://localhost:8000/login
+https://localhost:8000/api/v1/login
 ```
 
 ## Register
@@ -13,7 +13,7 @@ https://localhost:8000/login
 `POST :`
 
 ```sh
-https://localhost:8000/register
+https://localhost:8000/api/v1/register
 ```
 
 ## TopUp
@@ -21,7 +21,23 @@ https://localhost:8000/register
 `POST :`
 
 ```sh
-https://localhost:8000/topup
+https://localhost:8000/api/v1/topup
+```
+
+## TopUp History
+
+`GET :`
+
+```sh
+https://localhost:8000/api/v1/topup
+```
+
+## Tickets History
+
+`GET :`
+
+```sh
+https://localhost:8000/api/v1/tickets
 ```
 
 ## Create Ticket
@@ -29,7 +45,7 @@ https://localhost:8000/topup
 `POST :`
 
 ```sh
-https://localhost:8000/tickets
+https://localhost:8000/api/v1/tickets
 ```
 
 ## Delete Ticket
@@ -37,23 +53,31 @@ https://localhost:8000/tickets
 `DELETE :`
 
 ```sh
-https://localhost:8000/tickets/{ticket_id}
+https://localhost:8000/api/v1/tickets/{ticket_id}
 ```
 
-## Get Movies
+## Get Detail Movies
 
 `GET :`
 
 ```sh
-https://localhost:8000/movies
+https://localhost:8000/api/v1/movies/{movie_id}
 ```
 
-## Get Theater
+## Fetch Movies
 
 `GET :`
 
 ```sh
-https://localhost:8000/theater
+https://localhost:8000/api/v1/movies/?search=example
+```
+
+## Get All Theater
+
+`GET :`
+
+```sh
+https://localhost:8000/api/v1/theater
 ```
 
 ## Create Theater
@@ -61,7 +85,23 @@ https://localhost:8000/theater
 `POST :`
 
 ```sh
-https://localhost:8000/theater
+https://localhost:8000/api/v1/theater
+```
+
+## Update Theater
+
+`PUT :`
+
+```sh
+https://localhost:8000/api/v1/theater
+```
+
+## Delete Theater
+
+`DELETE :`
+
+```sh
+https://localhost:8000/api/v1/theater/{theater_id}
 ```
 
 ## Get Profile
@@ -69,7 +109,7 @@ https://localhost:8000/theater
 `GET :`
 
 ```sh
-https://localhost:8000/users
+https://localhost:8000/api/v1/users
 ```
 
 ## Update Profile
@@ -77,5 +117,5 @@ https://localhost:8000/users
 `UPDATE :`
 
 ```sh
-https://localhost:8000/users
+https://localhost:/api/v1/users
 ```

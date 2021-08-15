@@ -48,7 +48,7 @@ paths:
   /topup:
     post:
       tags:
-        - TopUp
+        - Topup
       summary: topup
       produces:
         - application/json
@@ -64,8 +64,36 @@ paths:
           description: topup failed
         409:
           description: an existing item already exists
-    #! Ticket
+    #! History Topup
+    get:
+      tags:
+        - History Topup
+      summary: history topup
+      responses:
+        200:
+          description: get all topup
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/HistoryTopup"
+        400:
+          description: bad input parameter
+  #! Ticket
   /tickets:
+    #! Get Ticket
+    get:
+      tags:
+        - Get Ticket
+      summary: get ticket
+      responses:
+        200:
+          description: get ticket
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Tickets"
+        400:
+          description: bad input parameter
     #! Create Ticket
     post:
       tags:
@@ -95,18 +123,23 @@ paths:
         - in: path
           required: true
           name: "ticket_id"
-          type: string
+          type: integer
       responses:
         200:
           description: delete success
         400:
           description: delete failed
-  #! Get Movies
+  #! Get Search Movies
   /movies:
     get:
       tags:
-        - Get Movies
+        - Get Search Movies
       summary: get movies
+      parameters:
+        - name: search
+          in: query
+          description: insert keyword
+          type: string
       responses:
         200:
           description: get movies
@@ -116,7 +149,25 @@ paths:
               $ref: "#/definitions/Movies"
         400:
           description: bad input parameter
-    #! Get Theater
+  #! Get Detail Movies
+  /movies/{movie_id}:
+    get:
+      tags:
+        - Get Detail Movies
+      summary: get detail movies
+      parameters:
+        - in: path
+          required: true
+          name: "movie_id"
+          type: integer
+      responses:
+        200:
+          description: get detail movies
+          schema:
+            $ref: "#/definitions/Movies"
+        400:
+          description: bad input parameter
+  #! Get Theater
   /theater:
     get:
       tags:
@@ -148,6 +199,34 @@ paths:
           description: create theater success
         400:
           description: create theater failed
+    #! Update Theater
+  /theater/{theater_id}:
+    put:
+      tags:
+        - Update Theater
+      summary: update theater
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Update Theater
+          description: update theater
+          schema:
+            $ref: "#/definitions/UpdateTheater"
+        - in: path
+          required: true
+          name: "theater_id"
+          type: integer
+      responses:
+        201:
+          description: item update
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists
+
   #! Profile
   /users:
     #! Get Profile
@@ -267,7 +346,7 @@ definitions:
       seats:
         type: string
         example: A8
-      total_price:
+      price:
         type: number
         example: 120000.00
       time:
@@ -299,6 +378,21 @@ definitions:
         type: integer
         example: 1048
 
+  HistoryTopup:
+    properties:
+      id:
+        type: integer
+        example: 231
+      user_id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: Gopay
+      balance:
+        type: number
+        example: 50000
+
   Theater:
     properties:
       id:
@@ -311,6 +405,14 @@ definitions:
         type: string
         example: Surabaya
   CreateTheater:
+    properties:
+      name:
+        type: string
+        example: CGV Surabaya
+      place:
+        type: string
+        example: Surabaya
+  UpdateTheater:
     properties:
       name:
         type: string
