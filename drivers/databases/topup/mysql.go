@@ -24,7 +24,7 @@ func (repository *mysqlTopUpRepository) Store(ctx context.Context, topupDomain *
 	if result.Error != nil {
 		return result.Error
 	}
-
+	
 	return nil
 }
 

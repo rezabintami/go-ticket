@@ -7,7 +7,7 @@ import (
 
 type Domain struct {
 	ID        int       `json:"id"`
-	User_ID   int       `json:"user_id"`
+	UserID   int       `json:"user_id"`
 	Name      string    `json:"name"`
 	Balance   float64   `json:"balance"`
 	CreatedAt time.Time `json:"-"`

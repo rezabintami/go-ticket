@@ -2,12 +2,14 @@ package topup
 
 import (
 	"ticketing/business/topup"
+	"ticketing/drivers/databases/users"
 	"time"
 )
 
 type Topup struct {
-	ID        int       `json:"id"`
-	User_ID   int       `json:"user_id"`
+	ID        int `json:"id"`
+	UserID    int `json:"user_id"`
+	User      users.Users
 	Name      string    `json:"name"`
 	Balance   float64   `json:"balance"`
 	CreatedAt time.Time `json:"created_at"`
@@ -17,7 +19,7 @@ type Topup struct {
 func (rec *Topup) toDomain() topup.Domain {
 	return topup.Domain{
 		ID:        rec.ID,
-		User_ID:   rec.User_ID,
+		UserID:    rec.UserID,
 		Name:      rec.Name,
 		Balance:   rec.Balance,
 		CreatedAt: rec.CreatedAt,
@@ -28,7 +30,7 @@ func (rec *Topup) toDomain() topup.Domain {
 func fromDomain(topupDomain topup.Domain) *Topup {
 	return &Topup{
 		ID:        topupDomain.ID,
-		User_ID:   topupDomain.User_ID,
+		UserID:    topupDomain.UserID,
 		Name:      topupDomain.Name,
 		Balance:   topupDomain.Balance,
 		CreatedAt: topupDomain.CreatedAt,
