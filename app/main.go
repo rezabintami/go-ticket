@@ -22,6 +22,7 @@ import (
 	_topupController "ticketing/controllers/topup"
 	_topupRepo "ticketing/drivers/databases/topup"
 
+	_config "ticketing/app/config"
 	_dbDriver "ticketing/drivers/mysql"
 
 	_middleware "ticketing/app/middleware"
@@ -34,26 +35,26 @@ import (
 	"github.com/spf13/viper"
 )
 
+// func init() {
+// 	viper.SetConfigFile(`app/config.json`)
+// 	err := viper.ReadInConfig()
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-func init() {
-	viper.SetConfigFile(`app/config.json`)
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(err)
-	}
-
-	if viper.GetBool(`debug`) {
-		log.Println("Service RUN on DEBUG mode")
-	}
-}
+// 	if viper.GetBool(`debug`) {
+// 		log.Println("Service RUN on DEBUG mode")
+// 	}
+// }
 
 func main() {
+	configApp := _config.GetConfig()
 	configDB := _dbDriver.ConfigDB{
-		DB_Username: viper.GetString(`database.user`),
-		DB_Password: viper.GetString(`database.pass`),
-		DB_Host:     viper.GetString(`database.host`),
-		DB_Port:     viper.GetString(`database.port`),
-		DB_Database: viper.GetString(`database.name`),
+		DB_Username: configApp.Database.User,
+		DB_Password: configApp.Database.Pass,
+		DB_Host:     configApp.Database.Host,
+		DB_Port:     configApp.Database.Port,
+		DB_Database: configApp.Database.Name,
 	}
 	db := configDB.InitialDB()
 
@@ -86,7 +87,7 @@ func main() {
 	moviesRepo := _moviesRepo.NewMySQLMoviesRepository(db)
 	moviesUsecase := _moviesUsecase.NewMoviesUsecase(moviesRepo, timeoutContext, MovieDBRepo)
 	moviesCtrl := _moviesController.NewMovieController(moviesUsecase)
-	
+
 	routesInit := _routes.ControllerList{
 		JWTMiddleware:     configJWT.Init(),
 		UserController:    *userCtrl,

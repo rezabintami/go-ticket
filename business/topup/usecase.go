@@ -26,11 +26,11 @@ func (tu *TopupUsecase) Store(ctx context.Context, topupDomain *Domain) error {
 	if err != nil {
 		return err
 	}
-	result, err := tu.userRepository.GetByID(ctx, topupDomain.User_ID)
+	result, err := tu.userRepository.GetByID(ctx, topupDomain.UserID)
 	if err != nil {
 		return err
 	}
-	err = tu.userRepository.UpdateUser(ctx, &users.Domain{Balance: result.Balance + topupDomain.Balance}, topupDomain.User_ID)
+	err = tu.userRepository.UpdateUser(ctx, &users.Domain{Balance: result.Balance + topupDomain.Balance}, topupDomain.UserID)
 	if err != nil {
 		return err
 	}
