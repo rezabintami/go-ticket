@@ -80,7 +80,7 @@ func main() {
 	theaterCtrl := _theaterController.NewTheaterController(theaterUsecase)
 
 	ticketsRepo := _ticketsRepo.NewMySQLTicketsRepository(db)
-	ticketsUsecase := _ticketsUsecase.NewTicketsUsecase(ticketsRepo, timeoutContext)
+	ticketsUsecase := _ticketsUsecase.NewTicketsUsecase(ticketsRepo, userRepo, timeoutContext)
 	ticketsCtrl := _ticketsController.NewTicketsController(ticketsUsecase)
 
 	MovieDBRepo := _movieDB.NewFetchMovies()

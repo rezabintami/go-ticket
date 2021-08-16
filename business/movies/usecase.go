@@ -29,14 +29,18 @@ func (mu *MoviesUsecase) Fetch(ctx context.Context, urlsearch string, search str
 	if err != nil {
 		return []Domain{}, err
 	}
+	
+	go func() {
 	for _, value := range result {
-		//! Check
-		err := mu.moviesRepository.Check(ctx, value.MovieID)
-		if err != nil {
-			//! Store
-			mu.moviesRepository.Store(ctx, &value)
+			//! Check
+			err := mu.moviesRepository.Check(ctx, value.MovieID)
+			if err != nil {
+				//! Store
+				mu.moviesRepository.Store(ctx, &value)
+			}
 		}
-	}
+	}()
+
 	res, err := mu.moviesRepository.Search(ctx, search)
 	if err != nil {
 		return []Domain{}, err

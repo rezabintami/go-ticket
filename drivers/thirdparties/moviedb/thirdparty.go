@@ -7,7 +7,6 @@ import (
 	"ticketing/business/moviedb"
 )
 
-//! PRELOAD Buat Join
 type FetchMovies struct {
 	httpClient http.Client
 }
