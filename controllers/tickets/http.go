@@ -24,12 +24,13 @@ func NewTicketsController(tu tickets.Usecase) *TicketsController {
 func (ctrl *TicketsController) Store(c echo.Context) error {
 	ctx := c.Request().Context()
 
+	id := middleware.GetUserId(c)
 	req := request.Tickets{}
 	if err := c.Bind(&req); err != nil {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	err := ctrl.ticketsUsecase.Store(ctx, req.ToDomain())
+	err := ctrl.ticketsUsecase.Store(ctx, req.ToDomain(), id)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
@@ -41,12 +42,13 @@ func (ctrl *TicketsController) Delete(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	id, _ := strconv.Atoi(c.Param("id"))
+	userId := middleware.GetUserId(c)
 	req := request.Tickets{}
 	if err := c.Bind(&req); err != nil {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	err := ctrl.ticketsUsecase.Delete(ctx, id)
+	err := ctrl.ticketsUsecase.Delete(ctx, id,userId)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}

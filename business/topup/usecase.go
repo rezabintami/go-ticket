@@ -9,7 +9,6 @@ import (
 type TopupUsecase struct {
 	topupRepository Repository
 	userRepository  users.Repository
-
 	contextTimeout time.Duration
 }
 

@@ -37,7 +37,16 @@ func (repository *mysqlTicketsRepository) Delete(ctx context.Context, id int) er
 	return nil
 }
 
-func (repository *mysqlTicketsRepository) GetByID(ctx context.Context, id int) ([]tickets.Domain, error) {
+func (repository *mysqlTicketsRepository) GetByID(ctx context.Context, id int) (tickets.Domain, error) {
+	tic := Tickets{}
+	result := repository.Conn.Where("id = ?", id).Find(&tic)
+	if result.Error != nil {
+		return tickets.Domain{}, result.Error
+	}
+	return tic.toDomain(), nil
+}
+
+func (repository *mysqlTicketsRepository) GetAllByID(ctx context.Context, id int) ([]tickets.Domain, error) {
 	tic := []Tickets{}
 	result := repository.Conn.Where("user_id = ?", id).Find(&tic)
 	if result.Error != nil {
