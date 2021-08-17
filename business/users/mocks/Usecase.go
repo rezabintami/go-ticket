@@ -15,14 +15,14 @@ type Usecase struct {
 }
 
 // GetByID provides a mock function with given fields: ctx, id
-func (_m *Usecase) GetByID(ctx context.Context, id int) (users.UserDomain, error) {
+func (_m *Usecase) GetByID(ctx context.Context, id int) (users.Domain, error) {
 	ret := _m.Called(ctx, id)
 
-	var r0 users.UserDomain
-	if rf, ok := ret.Get(0).(func(context.Context, int) users.UserDomain); ok {
+	var r0 users.Domain
+	if rf, ok := ret.Get(0).(func(context.Context, int) users.Domain); ok {
 		r0 = rf(ctx, id)
 	} else {
-		r0 = ret.Get(0).(users.UserDomain)
+		r0 = ret.Get(0).(users.Domain)
 	}
 
 	var r1 error
@@ -36,14 +36,14 @@ func (_m *Usecase) GetByID(ctx context.Context, id int) (users.UserDomain, error
 }
 
 // Login provides a mock function with given fields: ctx, email, password
-func (_m *Usecase) Login(ctx context.Context, email string, password string) (users.Domain, error) {
+func (_m *Usecase) Login(ctx context.Context, email string, password string) (string, error) {
 	ret := _m.Called(ctx, email, password)
 
-	var r0 users.Domain
-	if rf, ok := ret.Get(0).(func(context.Context, string, string) users.Domain); ok {
+	var r0 string
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) string); ok {
 		r0 = rf(ctx, email, password)
 	} else {
-		r0 = ret.Get(0).(users.Domain)
+		r0 = ret.Get(0).(string)
 	}
 
 	var r1 error

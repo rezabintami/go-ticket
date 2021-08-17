@@ -17,13 +17,13 @@ func NewMySQLUserRepository(conn *gorm.DB) users.Repository {
 	}
 }
 
-func (repository *mysqlUsersRepository) GetByID(ctx context.Context, id int) (users.UserDomain, error) {
+func (repository *mysqlUsersRepository) GetByID(ctx context.Context, id int) (users.Domain, error) {
 	usersById := Users{}
 	result := repository.Conn.Where("id = ?", id).First(&usersById)
 	if result.Error != nil {
-		return users.UserDomain{}, result.Error
+		return users.Domain{}, result.Error
 	}
-	return usersById.toUserDomain(), nil
+	return usersById.toDomain(), nil
 }
 
 func (repository *mysqlUsersRepository) UpdateUser(ctx context.Context, userDomain *users.Domain, id int) error {
@@ -35,15 +35,6 @@ func (repository *mysqlUsersRepository) UpdateUser(ctx context.Context, userDoma
 	}
 
 	return nil
-}
-
-func (repository *mysqlUsersRepository) Login(ctx context.Context, id int) (users.Domain, error) {
-	userLogin := Users{}
-	result := repository.Conn.Where("id = ?", id).First(&userLogin)
-	if result.Error != nil {
-		return users.Domain{}, result.Error
-	}
-	return userLogin.toDomain(), nil
 }
 
 func (nr *mysqlUsersRepository) GetByEmail(ctx context.Context, email string) (users.Domain, error) {

@@ -72,7 +72,7 @@ func TestStore(t *testing.T) {
 			UserID:  2,
 			Balance: 20000,
 		}
-		userDomain := users.UserDomain{
+		userDomain := users.Domain{
 			ID:    1,
 			Name:  "reza bintami",
 			Email: "rezabintami@gmail.com",
@@ -97,14 +97,14 @@ func TestStore(t *testing.T) {
 	t.Run("test case 3, id not found", func(t *testing.T) {
 		errRepository := errors.New("id not found")
 		topupRepository.On("Store", mock.Anything, mock.Anything).Return(nil).Once()
-		usersRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(users.UserDomain{}, errRepository).Once()
+		usersRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(users.Domain{}, errRepository).Once()
 
 		err := topupUsecase.Store(context.Background(), &topup.Domain{})
 
 		assert.Equal(t, errRepository, err)
 	})
 	t.Run("test case 4, repository error", func(t *testing.T) {
-		userDomain := users.UserDomain{
+		userDomain := users.Domain{
 			ID:    1,
 			Name:  "reza bintami",
 			Email: "rezabintami@gmail.com",

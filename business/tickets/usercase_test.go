@@ -85,7 +85,7 @@ func TestDelete(t *testing.T) {
 			TotalPrice:  120000,
 			Time:        time.Now(),
 		}
-		userDomain := users.UserDomain{
+		userDomain := users.Domain{
 			ID:    1,
 			Name:  "reza bintami",
 			Email: "rezabintami@gmail.com",
@@ -144,7 +144,7 @@ func TestDelete(t *testing.T) {
 		}
 		ticketsRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(ticketDomain, nil).Once()
 		ticketsRepository.On("Delete", mock.Anything, mock.AnythingOfType("int")).Return(nil).Once()
-		usersRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(users.UserDomain{}, errRepository).Once()
+		usersRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(users.Domain{}, errRepository).Once()
 
 		err := ticketsUsecase.Delete(context.Background(), -1, 1)
 
@@ -163,7 +163,7 @@ func TestDelete(t *testing.T) {
 			TotalPrice:  120000,
 			Time:        time.Now(),
 		}
-		userDomain := users.UserDomain{
+		userDomain := users.Domain{
 			ID:    1,
 			Name:  "reza bintami",
 			Email: "rezabintami@gmail.com",
@@ -191,7 +191,7 @@ func TestStore(t *testing.T) {
 			TotalPrice:  120000,
 			Time:        time.Now(),
 		}
-		userDomain := users.UserDomain{
+		userDomain := users.Domain{
 			ID:    1,
 			Name:  "reza bintami",
 			Email: "rezabintami@gmail.com",
@@ -228,7 +228,7 @@ func TestStore(t *testing.T) {
 
 		errRepository := errors.New("id user not found")
 		ticketsRepository.On("Store", mock.Anything, mock.Anything).Return(nil).Once()
-		usersRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(users.UserDomain{}, errRepository).Once()
+		usersRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(users.Domain{}, errRepository).Once()
 
 		err := ticketsUsecase.Store(context.Background(), &ticketDomain, 1)
 
@@ -246,7 +246,7 @@ func TestStore(t *testing.T) {
 			TotalPrice:  120000,
 			Time:        time.Now(),
 		}
-		userDomain := users.UserDomain{
+		userDomain := users.Domain{
 			ID:    1,
 			Name:  "reza bintami",
 			Email: "rezabintami@gmail.com",

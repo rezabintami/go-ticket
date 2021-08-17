@@ -44,13 +44,15 @@ func (controller *UserController) Login(c echo.Context) error {
 		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	user, err := controller.userUsecase.Login(ctx, userLogin.Email, userLogin.Password)
+	token, err := controller.userUsecase.Login(ctx, userLogin.Email, userLogin.Password)
 
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
-
-	return response.NewSuccessResponse(c, user)
+	result := struct {
+		Token string `json:"token"`
+	}{Token: token}
+	return response.NewSuccessResponse(c, result)
 }
 
 func (controller *UserController) GetProfile(c echo.Context) error {
@@ -67,7 +69,7 @@ func (controller *UserController) GetProfile(c echo.Context) error {
 
 func (controller *UserController) UpdateProfile(c echo.Context) error {
 	ctx := c.Request().Context()
-	
+
 	id := middleware.GetUserId(c)
 	req := request.Users{}
 	if err := c.Bind(&req); err != nil {

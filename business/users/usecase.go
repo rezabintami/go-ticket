@@ -23,28 +23,24 @@ func NewUserUsecase(ur Repository, jwtauth *middleware.ConfigJWT, timeout time.D
 	}
 }
 
-func (uc *UserUsecase) Login(ctx context.Context, email, password string) (Domain, error) {
+func (uc *UserUsecase) Login(ctx context.Context, email, password string) (string, error) {
 	existedUser, err := uc.userRepository.GetByEmail(ctx, email)
 	if err != nil {
-		if !strings.Contains(err.Error(), "not found") {
-			return Domain{}, err
-		}
+		return "", err
 	}
+	
 	if !encrypt.ValidateHash(password, existedUser.Password) {
-		return Domain{}, business.ErrUsernamePasswordNotFound
+		return "", business.ErrEmailPasswordNotFound
 	}
-	result, err := uc.userRepository.Login(ctx, existedUser.ID)
-	if err != nil {
-		return Domain{}, err
-	}
-	result.Token = uc.jwtAuth.GenerateToken(result.ID)
-	return result, nil
+
+	token := uc.jwtAuth.GenerateToken(existedUser.ID)
+	return token, nil
 }
 
-func (uc *UserUsecase) GetByID(ctx context.Context, id int) (UserDomain, error) {
+func (uc *UserUsecase) GetByID(ctx context.Context, id int) (Domain, error) {
 	result, err := uc.userRepository.GetByID(ctx, id)
 	if err != nil {
-		return UserDomain{}, err
+		return Domain{}, err
 	}
 	return result, nil
 }

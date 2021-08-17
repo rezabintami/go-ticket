@@ -31,7 +31,7 @@ func TestMain(m *testing.M) {
 
 func TestGetByID(t *testing.T) {
 	t.Run("test case 1, valid test", func(t *testing.T) {
-		domain := users.UserDomain{
+		domain := users.Domain{
 			ID:    1,
 			Name:  "reza bintami",
 			Email: "rezabintami@gmail.com",
@@ -46,9 +46,9 @@ func TestGetByID(t *testing.T) {
 
 	t.Run("test case 2, data not found", func(t *testing.T) {
 		errRepository := errors.New("data not found")
-		usersRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(users.UserDomain{}, errRepository).Once()
+		usersRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(users.Domain{}, errRepository).Once()
 		result, err := usersUsecase.GetByID(context.Background(), -1)
-		assert.Equal(t, result, users.UserDomain{})
+		assert.Equal(t, result, users.Domain{})
 		assert.Equal(t, err, errRepository)
 	})
 }
@@ -107,7 +107,7 @@ func TestRegister(t *testing.T) {
 	// t.Run("test case 4, hashing password error", func(t *testing.T) {
 	// 	domain := users.Domain{
 	// 		ID:       1,
-	// 		Password: "asyudasd820aisd",
+	// 		Password: "",
 	// 		Name:     "reza bintami",
 	// 		Email:    "rezabintami@gmail.com",
 	// 		Balance:  0,
@@ -175,37 +175,29 @@ func TestUpdateUser(t *testing.T) {
 
 func TestLogin(t *testing.T) {
 	t.Run("test case 1, valid test", func(t *testing.T) {
-		domain := users.Domain{
+		usersDomain := users.Domain{
 			ID:       1,
 			Password: "123123",
-			Name:     "reza bintami",
-			Email:    "rezabintami@gmail.com",
+			Name:     "zaza",
+			Email:    "zaza@gmail.com",
 			Balance:  0,
 			Language: "en",
 		}
-		usersRepository.On("GetByEmail", mock.Anything, mock.AnythingOfType("string")).Return(domain, nil).Once()
-		usersRepository.On("Login", mock.Anything, mock.AnythingOfType("int")).Return(domain, nil).Once()
+
+		usersRepository.On("GetByEmail", mock.Anything, mock.AnythingOfType("string")).Return(usersDomain, nil).Once()
+
+		_, err := usersUsecase.Login(context.Background(), "zaza@gmail.com", "123123")
+		assert.Nil(t, err)
+	})
+
+	t.Run("test case 2, error record", func(t *testing.T) {
+
+		errRepository := errors.New("error record")
+		usersRepository.On("GetByEmail", mock.Anything,  mock.AnythingOfType("string")).Return(users.Domain{}, errRepository).Once()
 
 		result, err := usersUsecase.Login(context.Background(), "rezabintami@gmail.com", "123123")
 
-		assert.Nil(t, err)
-		assert.Equal(t, domain.Name, result.Name)
+		assert.Equal(t, err, errRepository)
+		assert.Equal(t, "", result)
 	})
-
-	// t.Run("test case 2, id not found", func(t *testing.T) {
-	// 	domain := users.Domain{
-	// 		ID:       1,
-	// 		Password: "asyudasd820aisd",
-	// 		Name:     "reza bintami",
-	// 		Email:    "rezabintami@gmail.com",
-	// 		Balance:  0,
-	// 		Language: "en",
-	// 	}
-	// 	errRepository := errors.New("id not found")
-	// 	usersRepository.On("UpdateUser", mock.Anything, mock.Anything, mock.AnythingOfType("int")).Return(errRepository).Once()
-
-	// 	err := usersUsecase.UpdateUser(context.Background(), &domain, -1)
-
-	// 	assert.Equal(t, err, errRepository)
-	// })
 }

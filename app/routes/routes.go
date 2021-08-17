@@ -39,7 +39,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 
 	//! MOVIE
 	apiV1.GET("/movies", cl.MoviesController.Fetch, middleware.JWTWithConfig(cl.JWTMiddleware))
-	e.GET("/movies/:id", cl.MoviesController.GetDetailMovies, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.GET("/movies/:id", cl.MoviesController.GetDetailMovies, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	//! THEATER
 	apiV1.POST("/theater", cl.TheaterController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
