@@ -44,8 +44,8 @@ func (tu *TheaterUsecase) Update(ctx context.Context, theaterDomain *Domain, id 
 	return nil
 }
 
-func (tu *TheaterUsecase) GetAll(ctx context.Context, theaterDomain *Domain) ([]Domain, error) {
-	result, err := tu.theaterRepository.GetAll(ctx, theaterDomain)
+func (tu *TheaterUsecase) GetAll(ctx context.Context) ([]Domain, error) {
+	result, err := tu.theaterRepository.GetAll(ctx)
 	if err != nil {
 		return []Domain{}, err
 	}

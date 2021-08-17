@@ -22,12 +22,12 @@ func NewTicketsUsecase(tr Repository, us users.Repository, timeout time.Duration
 	}
 }
 
-func (tu *TicketsUsecase) Store(ctx context.Context, userDomain *Domain, id int) error {
+func (tu *TicketsUsecase) Store(ctx context.Context, ticketDomain *Domain, id int) error {
 	ctx, cancel := context.WithTimeout(ctx, tu.contextTimeout)
 	defer cancel()
-	userDomain.BookingCode = guid.GenerateUUID()
-	userDomain.Seats = seats.RandomString(2)
-	err := tu.ticketsRepository.Store(ctx, userDomain)
+	ticketDomain.BookingCode = guid.GenerateUUID()
+	ticketDomain.Seats = seats.RandomString(2)
+	err := tu.ticketsRepository.Store(ctx, ticketDomain)
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (tu *TicketsUsecase) Store(ctx context.Context, userDomain *Domain, id int)
 		return err
 	}
 
-	err = tu.userRepository.UpdateUser(ctx, &users.Domain{Balance: result.Balance - userDomain.TotalPrice}, id)
+	err = tu.userRepository.UpdateUser(ctx, &users.Domain{Balance: result.Balance - ticketDomain.TotalPrice}, id)
 	if err != nil {
 		return err
 	}

@@ -20,12 +20,12 @@ type Usecase interface {
 	Store(ctx context.Context, data *Domain) error
 	Delete(ctx context.Context, id int) error
 	Update(ctx context.Context, data *Domain, id int) error
-	GetAll(ctx context.Context, data *Domain) ([]Domain, error)
+	GetAll(ctx context.Context) ([]Domain, error)
 }
 
 type Repository interface {
 	Store(ctx context.Context, data *Domain) error
 	Delete(ctx context.Context, id int) error
 	Update(ctx context.Context, data *Domain, id int) error
-	GetAll(ctx context.Context, data *Domain) ([]Domain, error)
+	GetAll(ctx context.Context) ([]Domain, error)
 }
