@@ -21,10 +21,6 @@ func NewMoviesUsecase(mr Repository, timeout time.Duration, dbr moviedb.Reposito
 }
 
 func (mu *MoviesUsecase) Fetch(ctx context.Context, urlsearch string, search string) ([]Domain, error) {
-	//! Ambil Data Dari MOVIEDB
-	//! Taruh Dalam Array
-	//! Check Jika ada di DB
-	//! Store DB
 	result, err := mu.movieDBRepository.GetMovies(ctx, urlsearch)
 	if err != nil {
 		return []Domain{}, err
@@ -32,10 +28,8 @@ func (mu *MoviesUsecase) Fetch(ctx context.Context, urlsearch string, search str
 	
 	go func() {
 	for _, value := range result {
-			//! Check
 			err := mu.moviesRepository.Check(ctx, value.MovieID)
 			if err != nil {
-				//! Store
 				mu.moviesRepository.Store(ctx, &value)
 			}
 		}

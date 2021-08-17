@@ -49,7 +49,7 @@ func (repository *mysqlTheaterRepository) Update(ctx context.Context, theaterDom
 	return nil
 }
 
-func (repository *mysqlTheaterRepository) GetAll(ctx context.Context, theaterDomain *theater.Domain) ([]theater.Domain, error) {
+func (repository *mysqlTheaterRepository) GetAll(ctx context.Context) ([]theater.Domain, error) {
 	var rec []Theater
 
 	result := repository.Conn.Find(&rec)

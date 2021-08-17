@@ -74,12 +74,12 @@ func (ctrl *TheaterController) Update(c echo.Context) error {
 func (ctrl *TheaterController) GetAll(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	req := request.Theater{}
-	if err := c.Bind(&req); err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
-	}
+	// req := request.Theater{}
+	// if err := c.Bind(&req); err != nil {
+	// 	return response.NewErrorResponse(c, http.StatusBadRequest, err)
+	// }
 
-	result, err := ctrl.theaterUsecase.GetAll(ctx, req.ToDomain())
+	result, err := ctrl.theaterUsecase.GetAll(ctx)
 	if err != nil {
 		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
