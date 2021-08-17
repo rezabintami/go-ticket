@@ -29,16 +29,6 @@ func (rec *Users) toDomain() users.Domain {
 	}
 }
 
-func (rec *Users) toUserDomain() users.UserDomain {
-	return users.UserDomain{
-		ID:       rec.ID,
-		Name:     rec.Name,
-		Email:    rec.Email,
-		Balance:  rec.Balance,
-		Language: rec.Language,
-	}
-}
-
 func fromDomain(userDomain users.Domain) *Users {
 	return &Users{
 		ID:        userDomain.ID,

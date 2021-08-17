@@ -36,28 +36,7 @@ func (_m *Repository) GetByEmail(ctx context.Context, email string) (users.Domai
 }
 
 // GetByID provides a mock function with given fields: ctx, id
-func (_m *Repository) GetByID(ctx context.Context, id int) (users.UserDomain, error) {
-	ret := _m.Called(ctx, id)
-
-	var r0 users.UserDomain
-	if rf, ok := ret.Get(0).(func(context.Context, int) users.UserDomain); ok {
-		r0 = rf(ctx, id)
-	} else {
-		r0 = ret.Get(0).(users.UserDomain)
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
-		r1 = rf(ctx, id)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// Login provides a mock function with given fields: ctx, id
-func (_m *Repository) Login(ctx context.Context, id int) (users.Domain, error) {
+func (_m *Repository) GetByID(ctx context.Context, id int) (users.Domain, error) {
 	ret := _m.Called(ctx, id)
 
 	var r0 users.Domain

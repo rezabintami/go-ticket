@@ -1,121 +1,192 @@
 package movies_test
 
-// import (
-// 	"context"
-// 	"errors"
-// 	"os"
-// 	"testing"
-// 	movies "ticketing/business/movies"
-// 	moviesMock "ticketing/business/movies/mocks"
-// 	"ticketing/business/users"
-// 	usersMock "ticketing/business/users/mocks"
+import (
+	"context"
+	"errors"
+	"net/url"
+	"os"
+	"testing"
+	"ticketing/business/moviedb"
+	moviedbMock "ticketing/business/moviedb/mocks"
+	movies "ticketing/business/movies"
+	moviesMock "ticketing/business/movies/mocks"
 
-// 	"github.com/stretchr/testify/assert"
-// 	"github.com/stretchr/testify/mock"
-// )
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+)
 
-// var (
-// 	moviesRepository moviesMock.Repository
-// 	moviesUsecase   movies.Usecase
-// 	usersRepository usersMock.Repository
-// )
+var (
+	moviesRepository  moviesMock.Repository
+	moviesUsecase     movies.Usecase
+	moviedbRepository moviedbMock.Repository
+)
 
-// func setup() {
-// 	moviesUsecase = movies.NewMoviesUsecase(&moviesRepository, 2, &usersRepository)
-// }
+func setup() {
+	moviesUsecase = movies.NewMoviesUsecase(&moviesRepository, 2, &moviedbRepository)
+}
 
-// func TestMain(m *testing.M) {
-// 	setup()
-// 	os.Exit(m.Run())
-// }
+func TestMain(m *testing.M) {
+	setup()
+	os.Exit(m.Run())
+}
 
-// func TestGetByID(t *testing.T) {
-// 	t.Run("test case 1, valid test", func(t *testing.T) {
-// 		domain := []movies.Domain{
-// 			{
-// 				ID:      1,
-// 				Name:    "OVO",
-// 				UserID:  2,
-// 				Balance: 20000,
-// 			},
-// 			{
-// 				ID:      2,
-// 				Name:    "GOPAY",
-// 				UserID:  2,
-// 				Balance: 25000,
-// 			},
-// 		}
-// 		moviesRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(domain, nil).Once()
+func TestGetByID(t *testing.T) {
+	t.Run("test case 1, valid test", func(t *testing.T) {
+		domain := movies.Domain{
+			ID:          2,
+			Title:       "Tinker Bell and the Lost Treasure",
+			Language:    "en",
+			MovieID:     25475,
+			Description: "A blue harvest moon will rise, allowing the fairies to use a precious moonstone to restore the Pixie Dust Tree, the source of all their magic. But when Tinker Bell accidentally puts all of Pixie Hollow in jeopardy, she must venture out across the sea on a secret quest to set things right.",
+			Path:        "/hg1959yuBkHb4BKbIvETQSfxGCT.jpg",
+			VoteAverage: 6.8,
+			VoteCount:   721,
+		}
+		moviesRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(domain, nil).Once()
 
-// 		result, err := moviesUsecase.GetByID(context.Background(), 1)
+		result, err := moviesUsecase.GetByID(context.Background(), 1)
 
-// 		assert.Nil(t, err)
-// 		assert.Equal(t, 2, len(result))
-// 	})
+		assert.Nil(t, err)
+		assert.Equal(t, domain.Title, result.Title)
+	})
 
-// 	t.Run("test case 2, repository error", func(t *testing.T) {
-// 		errRepository := errors.New("data not found")
-// 		moviesRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return([]movies.Domain{}, errRepository).Once()
+	t.Run("test case 2, data not found", func(t *testing.T) {
+		errRepository := errors.New("data not found")
+		moviesRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(movies.Domain{}, errRepository).Once()
 
-// 		result, err := moviesUsecase.GetByID(context.Background(), -1)
+		result, err := moviesUsecase.GetByID(context.Background(), -1)
 
-// 		assert.Equal(t, 0, len(result))
-// 		assert.Equal(t, errRepository, err)
-// 	})
-// }
+		assert.Equal(t, errRepository, err)
+		assert.Equal(t, result, movies.Domain{})
+	})
+}
 
-// func TestStore(t *testing.T) {
-// 	t.Run("test case 1, valid test", func(t *testing.T) {
-// 		theaterdomain := movies.Domain{
-// 			ID:      1,
-// 			Name:    "OVO",
-// 			UserID:  2,
-// 			Balance: 20000,
-// 		}
-// 		userDomain := users.UserDomain{
-// 			ID:    1,
-// 			Name:  "reza bintami",
-// 			Email: "rezabintami@gmail.com",
-// 		}
-// 		moviesRepository.On("Store", mock.Anything, mock.Anything).Return(nil).Once()
-// 		usersRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(userDomain, nil).Once()
-// 		usersRepository.On("UpdateUser", mock.Anything, mock.Anything, mock.AnythingOfType("int")).Return(nil).Once()
+func TestFetch(t *testing.T) {
+	t.Run("test case 1, valid test", func(t *testing.T) {
+		moviedbDomain := []moviedb.Domain{
+			{
+				ID:          2,
+				Title:       "Tinker Bell and the Lost Treasure",
+				Language:    "en",
+				MovieID:     25475,
+				Description: "A blue harvest moon will rise, allowing the fairies to use a precious moonstone to restore the Pixie Dust Tree, the source of all their magic. But when Tinker Bell accidentally puts all of Pixie Hollow in jeopardy, she must venture out across the sea on a secret quest to set things right.",
+				Path:        "/hg1959yuBkHb4BKbIvETQSfxGCT.jpg",
+				VoteAverage: 6.8,
+				VoteCount:   721,
+			},
+			{
+				ID:          3,
+				Title:       "The Treasure of the Sierra Madre",
+				Language:    "en",
+				MovieID:     3090,
+				Description: "Fred C. Dobbs and Bob Curtin, both down on their luck in Tampico, Mexico in 1925, meet up with a grizzled prospector named Howard and decide to join with him in search of gold in the wilds of central Mexico. Through enormous difficulties, they eventually succeed in finding gold, but bandits, the elements, and most especially greed threaten to turn their success into disaster.",
+				Path:        "/58PUObt4eQTczaevgxJT8iGKoMa.jpg",
+				VoteAverage: 8.1,
+				VoteCount:   771,
+			},
+		}
+		movieDomain := []movies.Domain{
+			{
+				ID:          2,
+				Title:       "Tinker Bell and the Lost Treasure",
+				Language:    "en",
+				MovieID:     25475,
+				Description: "A blue harvest moon will rise, allowing the fairies to use a precious moonstone to restore the Pixie Dust Tree, the source of all their magic. But when Tinker Bell accidentally puts all of Pixie Hollow in jeopardy, she must venture out across the sea on a secret quest to set things right.",
+				Path:        "/hg1959yuBkHb4BKbIvETQSfxGCT.jpg",
+				VoteAverage: 6.8,
+				VoteCount:   721,
+			},
+			{
+				ID:          3,
+				Title:       "The Treasure of the Sierra Madre",
+				Language:    "en",
+				MovieID:     3090,
+				Description: "Fred C. Dobbs and Bob Curtin, both down on their luck in Tampico, Mexico in 1925, meet up with a grizzled prospector named Howard and decide to join with him in search of gold in the wilds of central Mexico. Through enormous difficulties, they eventually succeed in finding gold, but bandits, the elements, and most especially greed threaten to turn their success into disaster.",
+				Path:        "/58PUObt4eQTczaevgxJT8iGKoMa.jpg",
+				VoteAverage: 8.1,
+				VoteCount:   771,
+			},
+		}
 
-// 		err := moviesUsecase.Store(context.Background(), &theaterdomain)
+		errRepository := errors.New("data duplicate found")
 
-// 		assert.Nil(t, err)
-// 	})
+		moviedbRepository.On("GetMovies", mock.Anything, mock.AnythingOfType("string")).Return(moviedbDomain, nil).Once()
+		moviesRepository.On("Check", mock.Anything, mock.Anything).Return(errRepository)
+		moviesRepository.On("Store", mock.Anything, mock.Anything).Return(nil)
+		moviesRepository.On("Search", mock.Anything, mock.AnythingOfType("string")).Return(movieDomain, nil).Once()
 
-// 	t.Run("test case 2, data is null", func(t *testing.T) {
-// 		errRepository := errors.New("data is null")
-// 		moviesRepository.On("Store", mock.Anything, mock.Anything).Return(errRepository).Once()
+		result, err := moviesUsecase.Fetch(context.Background(), url.QueryEscape("Treasure"), "Treasure")
 
-// 		err := moviesUsecase.Store(context.Background(), &movies.Domain{})
+		assert.Nil(t, err)
+		assert.Equal(t, 2, len(result))
+	})
 
-// 		assert.Equal(t, errRepository, err)
-// 	})
-// 	t.Run("test case 3, id not found", func(t *testing.T) {
-// 		errRepository := errors.New("id not found")
-// 		moviesRepository.On("Store", mock.Anything, mock.Anything).Return(nil).Once()
-// 		usersRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(users.UserDomain{}, errRepository).Once()
+	t.Run("test case 2, data not found", func(t *testing.T) {
+		errRepository := errors.New("data not found")
+		moviedbRepository.On("GetMovies", mock.Anything, mock.AnythingOfType("string")).Return([]moviedb.Domain{}, errRepository).Once()
 
-// 		err := moviesUsecase.Store(context.Background(), &movies.Domain{})
+		result, err := moviesUsecase.Fetch(context.Background(), url.QueryEscape("Treasure"), "Treasure")
 
-// 		assert.Equal(t, errRepository, err)
-// 	})
-// 	t.Run("test case 4, repository error", func(t *testing.T) {
-// 		userDomain := users.UserDomain{
-// 			ID:    1,
-// 			Name:  "reza bintami",
-// 			Email: "rezabintami@gmail.com",
-// 		}
-// 		errRepository := errors.New("mysql not running")
-// 		moviesRepository.On("Store", mock.Anything, mock.Anything).Return(nil).Once()
-// 		usersRepository.On("GetByID", mock.Anything, mock.AnythingOfType("int")).Return(userDomain, nil).Once()
-// 		usersRepository.On("UpdateUser", mock.Anything, mock.Anything, mock.AnythingOfType("int")).Return(errRepository).Once()
+		assert.Equal(t, errRepository, err)
+		assert.Equal(t, result, []movies.Domain{})
+	})
 
-// 		err := moviesUsecase.Store(context.Background(), &movies.Domain{})
+	t.Run("test case 3, error searching", func(t *testing.T) {
+		moviedbDomain := []moviedb.Domain{
+			{
+				ID:          2,
+				Title:       "Tinker Bell and the Lost Treasure",
+				Language:    "en",
+				MovieID:     25475,
+				Description: "A blue harvest moon will rise, allowing the fairies to use a precious moonstone to restore the Pixie Dust Tree, the source of all their magic. But when Tinker Bell accidentally puts all of Pixie Hollow in jeopardy, she must venture out across the sea on a secret quest to set things right.",
+				Path:        "/hg1959yuBkHb4BKbIvETQSfxGCT.jpg",
+				VoteAverage: 6.8,
+				VoteCount:   721,
+			},
+			{
+				ID:          3,
+				Title:       "The Treasure of the Sierra Madre",
+				Language:    "en",
+				MovieID:     3090,
+				Description: "Fred C. Dobbs and Bob Curtin, both down on their luck in Tampico, Mexico in 1925, meet up with a grizzled prospector named Howard and decide to join with him in search of gold in the wilds of central Mexico. Through enormous difficulties, they eventually succeed in finding gold, but bandits, the elements, and most especially greed threaten to turn their success into disaster.",
+				Path:        "/58PUObt4eQTczaevgxJT8iGKoMa.jpg",
+				VoteAverage: 8.1,
+				VoteCount:   771,
+			},
+		}
+		movieDomain := []movies.Domain{
+			{
+				ID:          2,
+				Title:       "Tinker Bell and the Lost Treasure",
+				Language:    "en",
+				MovieID:     25475,
+				Description: "A blue harvest moon will rise, allowing the fairies to use a precious moonstone to restore the Pixie Dust Tree, the source of all their magic. But when Tinker Bell accidentally puts all of Pixie Hollow in jeopardy, she must venture out across the sea on a secret quest to set things right.",
+				Path:        "/hg1959yuBkHb4BKbIvETQSfxGCT.jpg",
+				VoteAverage: 6.8,
+				VoteCount:   721,
+			},
+			{
+				ID:          3,
+				Title:       "The Treasure of the Sierra Madre",
+				Language:    "en",
+				MovieID:     3090,
+				Description: "Fred C. Dobbs and Bob Curtin, both down on their luck in Tampico, Mexico in 1925, meet up with a grizzled prospector named Howard and decide to join with him in search of gold in the wilds of central Mexico. Through enormous difficulties, they eventually succeed in finding gold, but bandits, the elements, and most especially greed threaten to turn their success into disaster.",
+				Path:        "/58PUObt4eQTczaevgxJT8iGKoMa.jpg",
+				VoteAverage: 8.1,
+				VoteCount:   771,
+			},
+		}
 
-// 		assert.Equal(t, errRepository, err)
-// 	})
-// }
+		errRepository := errors.New("error searching")
+
+		moviedbRepository.On("GetMovies", mock.Anything, mock.AnythingOfType("string")).Return(moviedbDomain, nil).Once()
+		moviesRepository.On("Check", mock.Anything, mock.Anything).Return(errRepository)
+		moviesRepository.On("Store", mock.Anything, mock.Anything).Return(nil)
+		moviesRepository.On("Search", mock.Anything, mock.AnythingOfType("string")).Return(movieDomain, errRepository).Once()
+
+		result, err := moviesUsecase.Fetch(context.Background(), url.QueryEscape("Treasure"), "Treasure")
+
+		assert.Equal(t, errRepository, err)
+		assert.Equal(t, result, []movies.Domain{})
+	})
+}
