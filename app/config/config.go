@@ -14,7 +14,14 @@ type Config struct {
 	Context struct {
 		Timeout int
 	}
-	Database struct {
+	Mysql struct {
+		Host string
+		Port string
+		User string
+		Pass string
+		Name string
+	}
+	Mongo struct {
 		Host string
 		Port string
 		User string

@@ -23,7 +23,8 @@ import (
 	_topupRepo "ticketing/drivers/databases/topup"
 
 	_config "ticketing/app/config"
-	_dbDriver "ticketing/drivers/mysql"
+	_dbMongoDriver "ticketing/drivers/mongodb"
+	_dbMysqlDriver "ticketing/drivers/mysql"
 
 	_middleware "ticketing/app/middleware"
 	_routes "ticketing/app/routes"
@@ -35,28 +36,24 @@ import (
 	"github.com/spf13/viper"
 )
 
-// func init() {
-// 	viper.SetConfigFile(`app/config.json`)
-// 	err := viper.ReadInConfig()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	if viper.GetBool(`debug`) {
-// 		log.Println("Service RUN on DEBUG mode")
-// 	}
-// }
-
 func main() {
 	configApp := _config.GetConfig()
-	configDB := _dbDriver.ConfigDB{
-		DB_Username: configApp.Database.User,
-		DB_Password: configApp.Database.Pass,
-		DB_Host:     configApp.Database.Host,
-		DB_Port:     configApp.Database.Port,
-		DB_Database: configApp.Database.Name,
+	mysqlConfigDB := _dbMysqlDriver.ConfigDB{
+		DB_Username: configApp.Mysql.User,
+		DB_Password: configApp.Mysql.Pass,
+		DB_Host:     configApp.Mysql.Host,
+		DB_Port:     configApp.Mysql.Port,
+		DB_Database: configApp.Mysql.Name,
 	}
-	db := configDB.InitialDB()
+	mongoConfigDB := _dbMongoDriver.ConfigDB{
+		DB_Username: configApp.Mongo.User,
+		DB_Password: configApp.Mongo.Pass,
+		DB_Host:     configApp.Mongo.Host,
+		DB_Port:     configApp.Mongo.Port,
+		DB_Database: configApp.Mongo.Name,
+	}
+	mysql_db := mysqlConfigDB.InitialMysqlDB()
+	_ = mongoConfigDB.InitMongoDB()
 
 	configJWT := _middleware.ConfigJWT{
 		SecretJWT:       viper.GetString(`jwt.secret`),
@@ -67,24 +64,24 @@ func main() {
 
 	e := echo.New()
 
-	userRepo := _userRepo.NewMySQLUserRepository(db)
+	userRepo := _userRepo.NewMySQLUserRepository(mysql_db)
 	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
 	userCtrl := _userController.NewUserController(userUsecase)
 
-	topupRepo := _topupRepo.NewMySQLTopUpRepository(db)
+	topupRepo := _topupRepo.NewMySQLTopUpRepository(mysql_db)
 	topupUsecase := _topupUsecase.NewTopUpUsecase(topupRepo, timeoutContext, userRepo)
 	topupCtrl := _topupController.NewTopUpController(topupUsecase)
 
-	theaterRepo := _theaterRepo.NewMySQLTheaterRepository(db)
+	theaterRepo := _theaterRepo.NewMySQLTheaterRepository(mysql_db)
 	theaterUsecase := _theaterUsecase.NewTheaterUsecase(theaterRepo, timeoutContext)
 	theaterCtrl := _theaterController.NewTheaterController(theaterUsecase)
 
-	ticketsRepo := _ticketsRepo.NewMySQLTicketsRepository(db)
+	ticketsRepo := _ticketsRepo.NewMySQLTicketsRepository(mysql_db)
 	ticketsUsecase := _ticketsUsecase.NewTicketsUsecase(ticketsRepo, userRepo, timeoutContext)
 	ticketsCtrl := _ticketsController.NewTicketsController(ticketsUsecase)
 
 	MovieDBRepo := _movieDB.NewFetchMovies()
-	moviesRepo := _moviesRepo.NewMySQLMoviesRepository(db)
+	moviesRepo := _moviesRepo.NewMySQLMoviesRepository(mysql_db)
 	moviesUsecase := _moviesUsecase.NewMoviesUsecase(moviesRepo, timeoutContext, MovieDBRepo)
 	moviesCtrl := _moviesController.NewMovieController(moviesUsecase)
 
