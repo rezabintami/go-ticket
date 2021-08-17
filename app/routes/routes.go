@@ -20,10 +20,6 @@ type ControllerList struct {
 	TicketsController tickets.TicketsController
 }
 
-//! GET MOVIES BY ID
-//! GET MOVIES BY LANGUAGE
-//! CREATE TICKET
-//! CANCEL TICKET
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	apiV1 := e.Group("/api/v1")

@@ -21,7 +21,7 @@ type ConfigDB struct {
 	DB_Database string
 }
 
-func (config *ConfigDB) InitialDB() *gorm.DB {
+func (config *ConfigDB) InitialMysqlDB() *gorm.DB {
 	dsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8mb4&parseTime=True&loc=Local",
 		config.DB_Username,
 		config.DB_Password,
