@@ -3,6 +3,8 @@ package routes
 import (
 
 	// _middleware "ticketing/app/middleware"
+
+	_middleware "ticketing/app/middleware"
 	"ticketing/controllers/movies"
 	"ticketing/controllers/theater"
 	"ticketing/controllers/tickets"
@@ -25,18 +27,9 @@ type ControllerList struct {
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	apiV1 := e.Group("/api/v1")
-	// f, err := os.OpenFile("testlogfile.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
-	// if err != nil {
-	// 	log.Errorf("cannot open 'testlogfile', (%s)", err.Error())
-	// 	flag.Usage()
-	// 	os.Exit(-1)
-	// }
-	// log.SetOutput(f)
-	// apiV1.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{Output: os.Stdout}))
-
 	
+	apiV1.Use(_middleware.MiddlewareLogging)
 
-	// defer f.Close()
 	//! TOPUP
 	apiV1.POST("/topup", cl.TopUpController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
 	apiV1.GET("/topup", cl.TopUpController.GetByID, middleware.JWTWithConfig(cl.JWTMiddleware))

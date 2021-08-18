@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"ticketing/helper/logging"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -48,11 +49,9 @@ func GetUserId(c echo.Context) int {
 	return claims.ID
 }
 
-func OutputLogger() echo.MiddlewareFunc {
-	return func(hf echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			
-			return nil
-		}
-	}
+func MiddlewareLogging(next echo.HandlerFunc) echo.HandlerFunc {
+    return func(c echo.Context) error {
+        logging.Logging(c).Info("incoming request")
+        return next(c)
+    }
 }
