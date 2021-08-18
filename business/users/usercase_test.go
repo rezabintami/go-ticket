@@ -9,6 +9,7 @@ import (
 	"ticketing/business"
 	"ticketing/business/users"
 	usersMock "ticketing/business/users/mocks"
+	"ticketing/helper/encrypt"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -21,6 +22,7 @@ var (
 )
 
 func setup() {
+	jwtAuth = &middleware.ConfigJWT{SecretJWT: "abc123", ExpiresDuration: 2}
 	usersUsecase = users.NewUserUsecase(&usersRepository, jwtAuth, 2)
 }
 
@@ -175,9 +177,10 @@ func TestUpdateUser(t *testing.T) {
 
 func TestLogin(t *testing.T) {
 	t.Run("test case 1, valid test", func(t *testing.T) {
+		pass, _ := encrypt.Hash("123123")
 		usersDomain := users.Domain{
 			ID:       1,
-			Password: "123123",
+			Password: pass,
 			Name:     "zaza",
 			Email:    "zaza@gmail.com",
 			Balance:  0,
@@ -189,11 +192,28 @@ func TestLogin(t *testing.T) {
 		_, err := usersUsecase.Login(context.Background(), "zaza@gmail.com", "123123")
 		assert.Nil(t, err)
 	})
+	t.Run("test case 2, password error", func(t *testing.T) {
+		pass, _ := encrypt.Hash("1231231")
+		usersDomain := users.Domain{
+			ID:       1,
+			Password: pass,
+			Name:     "zaza",
+			Email:    "zaza@gmail.com",
+			Balance:  0,
+			Language: "en",
+		}
 
-	t.Run("test case 2, error record", func(t *testing.T) {
+		usersRepository.On("GetByEmail", mock.Anything, mock.AnythingOfType("string")).Return(usersDomain, nil).Once()
+
+		_, err := usersUsecase.Login(context.Background(), "zaza@gmail.com", "123123")
+		assert.Equal(t, err, business.ErrEmailPasswordNotFound)
+
+	})
+
+	t.Run("test case 3, error record", func(t *testing.T) {
 
 		errRepository := errors.New("error record")
-		usersRepository.On("GetByEmail", mock.Anything,  mock.AnythingOfType("string")).Return(users.Domain{}, errRepository).Once()
+		usersRepository.On("GetByEmail", mock.Anything, mock.AnythingOfType("string")).Return(users.Domain{}, errRepository).Once()
 
 		result, err := usersUsecase.Login(context.Background(), "rezabintami@gmail.com", "123123")
 

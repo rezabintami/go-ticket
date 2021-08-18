@@ -47,3 +47,12 @@ func GetUserId(c echo.Context) int {
 	claims := user.Claims.(*JwtCustomClaims)
 	return claims.ID
 }
+
+func OutputLogger() echo.MiddlewareFunc {
+	return func(hf echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			
+			return nil
+		}
+	}
+}
