@@ -67,10 +67,8 @@ func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain) error {
 		return business.ErrDuplicateData
 	}
 
-	userDomain.Password, err = encrypt.Hash(userDomain.Password)
-	if err != nil {
-		return business.ErrInternalServer
-	}
+	userDomain.Password, _ = encrypt.Hash(userDomain.Password)
+	
 	err = uc.userRepository.Register(ctx, userDomain)
 	if err != nil {
 		return err
