@@ -30,7 +30,7 @@ func (ctrl *TheaterController) Store(c echo.Context) error {
 
 	err := ctrl.theaterUsecase.Store(ctx, req.ToDomain())
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	return response.NewSuccessResponse(c, "Successfully inserted")
@@ -47,7 +47,7 @@ func (ctrl *TheaterController) Delete(c echo.Context) error {
 
 	err := ctrl.theaterUsecase.Delete(ctx, id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	return response.NewSuccessResponse(c, "Delete Successfully")
@@ -65,7 +65,7 @@ func (ctrl *TheaterController) Update(c echo.Context) error {
 
 	err := ctrl.theaterUsecase.Update(ctx, req.ToDomain(), id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	return response.NewSuccessResponse(c, "Update Successfully")
@@ -81,7 +81,7 @@ func (ctrl *TheaterController) GetAll(c echo.Context) error {
 
 	result, err := ctrl.theaterUsecase.GetAll(ctx)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	return response.NewSuccessResponse(c, result)

@@ -30,7 +30,7 @@ func (ctrl *TopUpController) Store(c echo.Context) error {
 
 	err := ctrl.topupUsecase.Store(ctx, req.ToDomain())
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	return response.NewSuccessResponse(c, "Successfully topup")
@@ -42,7 +42,7 @@ func (ctrl *TopUpController) GetByID(c echo.Context) error {
 	id := middleware.GetUserId(c)
 	result, err := ctrl.topupUsecase.GetByID(ctx, id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	return response.NewSuccessResponse(c, result)
