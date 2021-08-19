@@ -32,7 +32,7 @@ func (ctrl *TicketsController) Store(c echo.Context) error {
 
 	err := ctrl.ticketsUsecase.Store(ctx, req.ToDomain(), id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	return response.NewSuccessResponse(c, "Successfully create ticket")
@@ -50,7 +50,7 @@ func (ctrl *TicketsController) Delete(c echo.Context) error {
 
 	err := ctrl.ticketsUsecase.Delete(ctx, id,userId)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	return response.NewSuccessResponse(c, "Delete Successfully")
@@ -62,7 +62,7 @@ func (ctrl *TicketsController) GetByID(c echo.Context) error {
 	id := middleware.GetUserId(c)
 	result, err := ctrl.ticketsUsecase.GetByID(ctx, id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	return response.NewSuccessResponse(c, result)

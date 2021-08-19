@@ -30,7 +30,7 @@ func (ctrl *UserController) Register(c echo.Context) error {
 
 	err := ctrl.userUsecase.Register(ctx, req.ToDomain())
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	return response.NewSuccessResponse(c, "Successfully inserted")
@@ -47,7 +47,7 @@ func (controller *UserController) Login(c echo.Context) error {
 	token, err := controller.userUsecase.Login(ctx, userLogin.Email, userLogin.Password)
 
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 	result := struct {
 		Token string `json:"token"`
@@ -61,7 +61,7 @@ func (controller *UserController) GetProfile(c echo.Context) error {
 	id := middleware.GetUserId(c)
 	user, err := controller.userUsecase.GetByID(ctx, id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	return response.NewSuccessResponse(c, user)
@@ -77,11 +77,11 @@ func (controller *UserController) UpdateProfile(c echo.Context) error {
 	}
 	err := controller.userUsecase.UpdateUser(ctx, req.ToDomain(), id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 	user, err := controller.userUsecase.GetByID(ctx, id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 	return response.NewSuccessResponse(c, user)
 }
