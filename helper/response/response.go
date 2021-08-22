@@ -1,4 +1,4 @@
-package response
+package base_response
 
 import (
 	"net/http"
@@ -20,6 +20,14 @@ func NewSuccessResponse(c echo.Context, param interface{}) error {
 	response.Data = param
 
 	return c.JSON(http.StatusOK, response)
+}
+
+func NewSuccessInsertResponse(c echo.Context, param interface{}) error {
+	response := BaseResponse{}
+	response.Meta.Message = "Success Insert"
+	response.Data = param
+
+	return c.JSON(http.StatusCreated, response)
 }
 
 func NewErrorResponse(c echo.Context, status int, err error) error {

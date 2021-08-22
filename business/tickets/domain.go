@@ -6,17 +6,16 @@ import (
 )
 
 type Domain struct {
-	ID          int       `json:"id"`
-	BookingCode string    `json:"booking_code"`
-	MovieID     int       `json:"movie_id"`
-	UserID      int       `json:"user_id"`
-	TheaterID   int       `json:"theater_id"`
-	Seats       string    `json:"seats"`
-	TotalPrice  float64   `json:"total_price"`
-	Time        time.Time `json:"time"`
-	CreatedAt   time.Time `json:"-"`
-	UpdatedAt   time.Time `json:"-"`
-	// DeletedAt   gorm.DeletedAt `json:"deleted_at"`
+	ID          int      
+	BookingCode string   
+	MovieID     int       
+	UserID      int       
+	TheaterID   int     
+	Seats       string   
+	TotalPrice  float64   
+	Time        time.Time 
+	CreatedAt   time.Time 
+	UpdatedAt   time.Time
 }
 
 type Usecase interface {

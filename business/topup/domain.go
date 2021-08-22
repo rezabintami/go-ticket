@@ -6,12 +6,12 @@ import (
 )
 
 type Domain struct {
-	ID        int       `json:"id"`
-	UserID   int       `json:"user_id"`
-	Name      string    `json:"name"`
-	Balance   float64   `json:"balance"`
-	CreatedAt time.Time `json:"-"`
-	UpdatedAt time.Time `json:"-"`
+	ID        int
+	UserID    int
+	Name      string
+	Balance   float64
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 type Usecase interface {
 	Store(ctx context.Context, data *Domain) error

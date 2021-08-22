@@ -5,7 +5,8 @@ import (
 	"strconv"
 	"ticketing/business/theater"
 	"ticketing/controllers/theater/request"
-	"ticketing/helper/response"
+	"ticketing/controllers/theater/response"
+	base_response "ticketing/helper/response"
 
 	echo "github.com/labstack/echo/v4"
 )
@@ -25,15 +26,15 @@ func (ctrl *TheaterController) Store(c echo.Context) error {
 
 	req := request.Theater{}
 	if err := c.Bind(&req); err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	err := ctrl.theaterUsecase.Store(ctx, req.ToDomain())
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return response.NewSuccessResponse(c, "Successfully inserted")
+	return base_response.NewSuccessInsertResponse(c, "Successfully inserted")
 }
 
 func (ctrl *TheaterController) Delete(c echo.Context) error {
@@ -42,15 +43,15 @@ func (ctrl *TheaterController) Delete(c echo.Context) error {
 
 	req := request.Theater{}
 	if err := c.Bind(&req); err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	err := ctrl.theaterUsecase.Delete(ctx, id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return response.NewSuccessResponse(c, "Delete Successfully")
+	return base_response.NewSuccessResponse(c, "Delete Successfully")
 }
 
 func (ctrl *TheaterController) Update(c echo.Context) error {
@@ -60,29 +61,24 @@ func (ctrl *TheaterController) Update(c echo.Context) error {
 
 	req := request.Theater{}
 	if err := c.Bind(&req); err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	err := ctrl.theaterUsecase.Update(ctx, req.ToDomain(), id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return response.NewSuccessResponse(c, "Update Successfully")
+	return base_response.NewSuccessResponse(c, "Update Successfully")
 }
 
 func (ctrl *TheaterController) GetAll(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	// req := request.Theater{}
-	// if err := c.Bind(&req); err != nil {
-	// 	return response.NewErrorResponse(c, http.StatusBadRequest, err)
-	// }
-
 	result, err := ctrl.theaterUsecase.GetAll(ctx)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return response.NewSuccessResponse(c, result)
+	return base_response.NewSuccessResponse(c, response.FromDomain(result))
 }
