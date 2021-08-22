@@ -1,4 +1,4 @@
-package response
+package base_response
 
 import (
 	"net/http"
@@ -16,6 +16,15 @@ type BaseResponse struct {
 
 func NewSuccessResponse(c echo.Context, param interface{}) error {
 	response := BaseResponse{}
+	response.Meta.Message = "Success"
+	response.Data = param
+
+	return c.JSON(http.StatusOK, response)
+}
+
+func NewSuccessInsertResponse(c echo.Context, param interface{}) error {
+	response := BaseResponse{}
+	response.Meta.Status = http.StatusCreated
 	response.Meta.Message = "Success"
 	response.Data = param
 
