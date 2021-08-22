@@ -7,17 +7,16 @@ import (
 )
 
 type Domain struct {
-	ID          int       `json:"id"`
-	Title       string    `json:"original_title"`
-	Language    string    `json:"original_language"`
-	MovieID     int64     `json:"movie_id"`
-	Description string    `json:"overview"`
-	Path        string    `json:"poster_path"`
-	VoteAverage float64   `json:"vote_average"`
-	VoteCount   int64     `json:"vote_count"`
-	CreatedAt   time.Time `json:"-"`
-	UpdatedAt   time.Time `json:"-"`
-	// DeletedAt   time.Time `json:"deleted_at"`
+	ID          int
+	Title       string
+	Language    string
+	MovieID     int64
+	Description string
+	Path        string
+	VoteAverage float64
+	VoteCount   int64
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type Usecase interface {

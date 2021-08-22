@@ -2,20 +2,16 @@ package response
 
 import (
 	"ticketing/business/movies"
-	"time"
 )
 
 type Movie struct {
-	ID          int       `json:"id"`
-	Title       string    `json:"original_title"`
-	Language    string    `json:"original_language"`
-	Description string    `json:"overview"`
-	Path        string    `json:"poster_path"`
-	VoteAverage float64    `json:"vote_average"`
-	VoteCount   int64    `json:"vote_count"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-	// DeletedAt   time.Time `json:"deleted_at"`
+	ID          int     `json:"id"`
+	Title       string  `json:"original_title"`
+	Language    string  `json:"original_language"`
+	Description string  `json:"overview"`
+	Path        string  `json:"poster_path"`
+	VoteAverage float64 `json:"vote_average"`
+	VoteCount   int64   `json:"vote_count"`
 }
 
 func FromDomain(moviesDomain movies.Domain) Movie {
@@ -27,8 +23,22 @@ func FromDomain(moviesDomain movies.Domain) Movie {
 		Path:        moviesDomain.Path,
 		VoteAverage: moviesDomain.VoteAverage,
 		VoteCount:   moviesDomain.VoteCount,
-		CreatedAt:   moviesDomain.CreatedAt,
-		UpdatedAt:   moviesDomain.UpdatedAt,
-		// DeletedAt:   moviesDomain.DeletedAt,
 	}
+}
+
+func FromAllDomain(moviesDomain []movies.Domain) []Movie {
+	movies := []Movie{}
+	for _, value := range moviesDomain {
+		mov := Movie{
+			ID:          value.ID,
+			Title:       value.Title,
+			Language:    value.Language,
+			Description: value.Description,
+			Path:        value.Path,
+			VoteAverage: value.VoteAverage,
+			VoteCount:   value.VoteCount,
+		}
+		movies = append(movies, mov)
+	}
+	return movies
 }

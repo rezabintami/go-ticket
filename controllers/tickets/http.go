@@ -6,7 +6,8 @@ import (
 	"ticketing/app/middleware"
 	"ticketing/business/tickets"
 	"ticketing/controllers/tickets/request"
-	"ticketing/helper/response"
+	"ticketing/controllers/tickets/response"
+	base_response "ticketing/helper/response"
 
 	echo "github.com/labstack/echo/v4"
 )
@@ -27,15 +28,15 @@ func (ctrl *TicketsController) Store(c echo.Context) error {
 	id := middleware.GetUserId(c)
 	req := request.Tickets{}
 	if err := c.Bind(&req); err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	err := ctrl.ticketsUsecase.Store(ctx, req.ToDomain(), id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return base_response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	return response.NewSuccessResponse(c, "Successfully create ticket")
+	return base_response.NewSuccessInsertResponse(c, "Successfully create ticket")
 }
 
 func (ctrl *TicketsController) Delete(c echo.Context) error {
@@ -45,15 +46,15 @@ func (ctrl *TicketsController) Delete(c echo.Context) error {
 	userId := middleware.GetUserId(c)
 	req := request.Tickets{}
 	if err := c.Bind(&req); err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	err := ctrl.ticketsUsecase.Delete(ctx, id,userId)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return base_response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	return response.NewSuccessResponse(c, "Delete Successfully")
+	return base_response.NewSuccessResponse(c, "Delete Successfully")
 }
 
 func (ctrl *TicketsController) GetByID(c echo.Context) error {
@@ -62,8 +63,8 @@ func (ctrl *TicketsController) GetByID(c echo.Context) error {
 	id := middleware.GetUserId(c)
 	result, err := ctrl.ticketsUsecase.GetByID(ctx, id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return base_response.NewErrorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	return response.NewSuccessResponse(c, result)
+	return base_response.NewSuccessResponse(c, response.FromDomain(result))
 }

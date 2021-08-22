@@ -5,7 +5,8 @@ import (
 	"ticketing/app/middleware"
 	"ticketing/business/topup"
 	"ticketing/controllers/topup/request"
-	"ticketing/helper/response"
+	"ticketing/controllers/topup/response"
+	base_response "ticketing/helper/response"
 
 	echo "github.com/labstack/echo/v4"
 )
@@ -25,15 +26,15 @@ func (ctrl *TopUpController) Store(c echo.Context) error {
 
 	req := request.TopUp{}
 	if err := c.Bind(&req); err != nil {
-		return response.NewErrorResponse(c, http.StatusBadRequest, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
 	err := ctrl.topupUsecase.Store(ctx, req.ToDomain())
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return response.NewSuccessResponse(c, "Successfully topup")
+	return base_response.NewSuccessInsertResponse(c, "Successfully insert topup")
 }
 
 func (ctrl *TopUpController) GetByID(c echo.Context) error {
@@ -42,8 +43,8 @@ func (ctrl *TopUpController) GetByID(c echo.Context) error {
 	id := middleware.GetUserId(c)
 	result, err := ctrl.topupUsecase.GetByID(ctx, id)
 	if err != nil {
-		return response.NewErrorResponse(c, http.StatusInternalServerError, err)
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return response.NewSuccessResponse(c, result)
+	return base_response.NewSuccessResponse(c, response.FromDomain(result))
 }

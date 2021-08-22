@@ -6,23 +6,15 @@ import (
 )
 
 type Domain struct {
-	ID        int       `json:"id"`
-	Name      string    `json:"name"`
-	Password  string    `json:"-"`
-	Email     string    `json:"email"`
-	Balance   float64   `json:"balance"`
-	Language  string    `json:"language"`
-	CreatedAt time.Time `json:"-"`
-	UpdatedAt time.Time `json:"-"`
+	ID        int     
+	Name      string    
+	Password  string  
+	Email     string    
+	Balance   float64  
+	Language  string   
+	CreatedAt time.Time 
+	UpdatedAt time.Time
 }
-
-// type UserDomain struct {
-// 	ID       int     `json:"id"`
-// 	Name     string  `json:"name"`
-// 	Email    string  `json:"email"`
-// 	Balance  float64 `json:"balance"`
-// 	Language string  `json:"language"`
-// }
 
 type Usecase interface {
 	Login(ctx context.Context, email, password string) (string, error)

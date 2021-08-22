@@ -8,12 +8,12 @@ import (
 )
 
 type Domain struct {
-	ID        int            `json:"id"`
-	Name      string         `json:"name"`
-	Place     string         `json:"place"`
-	CreatedAt time.Time      `json:"-"`
-	UpdatedAt time.Time      `json:"-"`
-	DeletedAt gorm.DeletedAt `json:"-"`
+	ID        int           
+	Name      string       
+	Place     string         
+	CreatedAt time.Time      
+	UpdatedAt time.Time    
+	DeletedAt gorm.DeletedAt 
 }
 
 type Usecase interface {
