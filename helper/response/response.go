@@ -24,11 +24,10 @@ func NewSuccessResponse(c echo.Context, param interface{}) error {
 
 func NewSuccessInsertResponse(c echo.Context, param interface{}) error {
 	response := BaseResponse{}
-	response.Meta.Status = http.StatusCreated
-	response.Meta.Message = "Success"
+	response.Meta.Message = "Success Insert"
 	response.Data = param
 
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusCreated, response)
 }
 
 func NewErrorResponse(c echo.Context, status int, err error) error {
