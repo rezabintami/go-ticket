@@ -1,9 +1,8 @@
 package routes
 
 import (
-
-	// _middleware "ticketing/app/middleware"
-
+	"html/template"
+	"io"
 	_middleware "ticketing/app/middleware"
 	"ticketing/controllers/movies"
 	"ticketing/controllers/theater"
@@ -24,10 +23,21 @@ type ControllerList struct {
 	TicketsController tickets.TicketsController
 }
 
+type Template struct {
+	templates *template.Template
+}
+
+func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
+}
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
+	t := &Template{
+		templates: template.Must(template.ParseGlob("public/view/*.html")),
+	}
+	e.Renderer = t
 	apiV1 := e.Group("/api/v1")
-	
+
 	apiV1.Use(_middleware.MiddlewareLogging)
 
 	//! TOPUP
@@ -54,6 +64,10 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	apiV1.GET("/theater", cl.TheaterController.GetAll, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	//! AUTH
-	apiV1.POST("/register", cl.UserController.Register)
-	apiV1.POST("/login", cl.UserController.Login)
+	auth := apiV1.Group("/auth")
+	auth.POST("/register", cl.UserController.Register)
+	auth.POST("/login", cl.UserController.Login)
+	auth.GET("/login/google", cl.UserController.Google)
+	auth.GET("/google", cl.UserController.LoginGoogle)
+	auth.GET("/google/callback", cl.UserController.HandleGoogle)
 }
