@@ -67,7 +67,15 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	auth := apiV1.Group("/auth")
 	auth.POST("/register", cl.UserController.Register)
 	auth.POST("/login", cl.UserController.Login)
-	auth.GET("/login/google", cl.UserController.Google)
+
+	//! OAUTH2
+	auth.GET("/login/oauth", cl.UserController.OauthLogin)
+	//! GOOGLE
 	auth.GET("/google", cl.UserController.LoginGoogle)
 	auth.GET("/google/callback", cl.UserController.HandleGoogle)
+	//! FACEBOOK
+	auth.GET("/facebook", cl.UserController.LoginFacebook)
+	auth.GET("/facebook/callback", cl.UserController.HandleFacebook)
+
+
 }

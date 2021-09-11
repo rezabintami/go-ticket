@@ -37,6 +37,11 @@ type Config struct {
 		ClientID string
 		Secret   string
 	}
+
+	Facebook struct {
+		ClientID string
+		Secret   string
+	}
 	
 	// JWT struct {
 	// 	Secret  string
