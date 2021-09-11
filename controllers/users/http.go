@@ -48,7 +48,7 @@ func (controller *UserController) Register(c echo.Context) error {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	err := controller.userUsecase.Register(ctx, req.ToDomain())
+	err := controller.userUsecase.Register(ctx, req.ToDomain(), false)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
@@ -118,7 +118,6 @@ func (controller *UserController) LoginGoogle(c echo.Context) error {
 }
 
 func (controller *UserController) HandleGoogle(c echo.Context) error {
-	fmt.Println("masuk handle google")
 	ctx := c.Request().Context()
 
 	if randomstate != c.QueryParam("state") {
@@ -140,7 +139,7 @@ func (controller *UserController) HandleGoogle(c echo.Context) error {
 	req := request.Users{}
 	json.NewDecoder(UserInfo.Body).Decode(&req)
 	
-	err = controller.userUsecase.Register(ctx, req.ToDomain())
+	err = controller.userUsecase.Register(ctx, req.ToDomain(), true)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}

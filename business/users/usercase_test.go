@@ -68,7 +68,7 @@ func TestRegister(t *testing.T) {
 		usersRepository.On("GetByEmail", mock.Anything, mock.Anything).Return(users.Domain{}, nil).Once()
 		usersRepository.On("Register", mock.Anything, mock.Anything).Return(nil).Once()
 
-		err := usersUsecase.Register(context.Background(), &domain)
+		err := usersUsecase.Register(context.Background(), &domain, false)
 
 		assert.Nil(t, err)
 	})
@@ -85,7 +85,7 @@ func TestRegister(t *testing.T) {
 		errRepository := errors.New("duplicate data")
 		usersRepository.On("GetByEmail", mock.Anything, mock.Anything).Return(domain, errRepository).Once()
 
-		err := usersUsecase.Register(context.Background(), &domain)
+		err := usersUsecase.Register(context.Background(), &domain, false)
 
 		assert.Equal(t, err, business.ErrDuplicateData)
 	})
@@ -101,7 +101,7 @@ func TestRegister(t *testing.T) {
 		}
 		usersRepository.On("GetByEmail", mock.Anything, mock.Anything).Return(domain, nil).Once()
 
-		err := usersUsecase.Register(context.Background(), &domain)
+		err := usersUsecase.Register(context.Background(), &domain, false)
 
 		assert.Equal(t, err, business.ErrDuplicateData)
 	})
@@ -134,7 +134,7 @@ func TestRegister(t *testing.T) {
 		usersRepository.On("GetByEmail", mock.Anything, mock.Anything).Return(users.Domain{}, nil).Once()
 		usersRepository.On("Register", mock.Anything, mock.Anything).Return(errRepository).Once()
 
-		err := usersUsecase.Register(context.Background(), &domain)
+		err := usersUsecase.Register(context.Background(), &domain, false)
 
 		assert.Equal(t, err, errRepository)
 	})
