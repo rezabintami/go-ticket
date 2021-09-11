@@ -13,6 +13,7 @@ import (
 
 	echo "github.com/labstack/echo/v4"
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/facebook"
 	"golang.org/x/oauth2/google"
 )
 
@@ -27,7 +28,18 @@ var (
 		},
 		Endpoint: google.Endpoint,
 	}
-	randomstate = "random"
+	googlerandomstate = "random"
+)
+
+var (
+	facebookOauthConfig = &oauth2.Config{
+		ClientID:     _config.GetConfig().Facebook.ClientID,
+		ClientSecret: _config.GetConfig().Facebook.Secret,
+		RedirectURL:  "http://localhost:8000/api/v1/auth/facebook/callback",
+		Scopes:       []string{"public_profile","email"},
+		Endpoint:     facebook.Endpoint,
+	}
+	facebookrandomstate = "random"
 )
 
 type UserController struct {
@@ -107,12 +119,12 @@ func (controller *UserController) UpdateProfile(c echo.Context) error {
 }
 
 //! OAuth2 Google
-func (controller *UserController) Google(c echo.Context) error {
-	return c.Render(http.StatusOK, "googleauth.html", nil)
+func (controller *UserController) OauthLogin(c echo.Context) error {
+	return c.Render(http.StatusOK, "oauth.html", nil)
 }
 
 func (controller *UserController) LoginGoogle(c echo.Context) error {
-	url := googleOauthConfig.AuthCodeURL(randomstate)
+	url := googleOauthConfig.AuthCodeURL(googlerandomstate)
 	c.Redirect(http.StatusTemporaryRedirect, url)
 	return nil
 }
@@ -120,8 +132,8 @@ func (controller *UserController) LoginGoogle(c echo.Context) error {
 func (controller *UserController) HandleGoogle(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	if randomstate != c.QueryParam("state") {
-		return base_response.NewErrorResponse(c, http.StatusUnauthorized, fmt.Errorf("invalid session state: %s", randomstate))
+	if googlerandomstate != c.QueryParam("state") {
+		return base_response.NewErrorResponse(c, http.StatusUnauthorized, fmt.Errorf("invalid session state: %s", googlerandomstate))
 	}
 
 	token, err := googleOauthConfig.Exchange(ctx, c.QueryParam("code"))
@@ -138,11 +150,47 @@ func (controller *UserController) HandleGoogle(c echo.Context) error {
 
 	req := request.Users{}
 	json.NewDecoder(UserInfo.Body).Decode(&req)
-	
+
 	err = controller.userUsecase.Register(ctx, req.ToDomain(), true)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return base_response.NewSuccessInsertResponse(c, "Successfully inserted")
+	return base_response.NewSuccessResponse(c, "Successfully Login")
+}
+
+func (controller *UserController) LoginFacebook(c echo.Context) error {
+	url := facebookOauthConfig.AuthCodeURL(facebookrandomstate)
+	c.Redirect(http.StatusTemporaryRedirect, url)
+	return nil
+}
+
+func (controller *UserController) HandleFacebook(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	if facebookrandomstate != c.QueryParam("state") {
+		return base_response.NewErrorResponse(c, http.StatusUnauthorized, fmt.Errorf("invalid session state: %s", facebookrandomstate))
+	}
+
+	token, err := facebookOauthConfig.Exchange(ctx, c.QueryParam("code"))
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	client := facebookOauthConfig.Client(ctx, token)
+	UserInfo, err := client.Get("https://graph.facebook.com/me?fields=name,email")
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+	defer UserInfo.Body.Close()
+	
+	req := request.Users{}
+	json.NewDecoder(UserInfo.Body).Decode(&req)
+
+	err = controller.userUsecase.Register(ctx, req.ToDomain(), true)
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	return base_response.NewSuccessResponse(c, "Successfully Login")
 }
