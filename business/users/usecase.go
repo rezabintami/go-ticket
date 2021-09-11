@@ -53,7 +53,7 @@ func (uc *UserUsecase) UpdateUser(ctx context.Context, userDomain *Domain, id in
 	return nil
 }
 
-func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain) error {
+func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain, sso bool) error {
 	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 
@@ -67,7 +67,11 @@ func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain) error {
 		return business.ErrDuplicateData
 	}
 
-	userDomain.Password, _ = encrypt.Hash(userDomain.Password)
+	if !sso {
+		userDomain.Password, _ = encrypt.Hash(userDomain.Password)
+	}
+	
+	userDomain.Sso = sso
 	
 	err = uc.userRepository.Register(ctx, userDomain)
 	if err != nil {
