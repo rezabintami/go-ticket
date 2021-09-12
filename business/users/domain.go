@@ -18,7 +18,7 @@ type Domain struct {
 }
 
 type Usecase interface {
-	Login(ctx context.Context, email, password string) (string, error)
+	Login(ctx context.Context, email, password string,  sso bool) (string, error)
 	Register(ctx context.Context, data *Domain, sso bool) error
 	GetByID(ctx context.Context, id int) (Domain, error)
 	UpdateUser(ctx context.Context, data *Domain, id int) error

@@ -189,7 +189,7 @@ func TestLogin(t *testing.T) {
 
 		usersRepository.On("GetByEmail", mock.Anything, mock.AnythingOfType("string")).Return(usersDomain, nil).Once()
 
-		_, err := usersUsecase.Login(context.Background(), "zaza@gmail.com", "123123")
+		_, err := usersUsecase.Login(context.Background(), "zaza@gmail.com", "123123", false)
 		assert.Nil(t, err)
 	})
 	t.Run("test case 2, password error", func(t *testing.T) {
@@ -205,7 +205,7 @@ func TestLogin(t *testing.T) {
 
 		usersRepository.On("GetByEmail", mock.Anything, mock.AnythingOfType("string")).Return(usersDomain, nil).Once()
 
-		_, err := usersUsecase.Login(context.Background(), "zaza@gmail.com", "123123")
+		_, err := usersUsecase.Login(context.Background(), "zaza@gmail.com", "123123", false)
 		assert.Equal(t, err, business.ErrEmailPasswordNotFound)
 
 	})
@@ -215,7 +215,7 @@ func TestLogin(t *testing.T) {
 		errRepository := errors.New("error record")
 		usersRepository.On("GetByEmail", mock.Anything, mock.AnythingOfType("string")).Return(users.Domain{}, errRepository).Once()
 
-		result, err := usersUsecase.Login(context.Background(), "rezabintami@gmail.com", "123123")
+		result, err := usersUsecase.Login(context.Background(), "rezabintami@gmail.com", "123123", false)
 
 		assert.Equal(t, err, errRepository)
 		assert.Equal(t, "", result)

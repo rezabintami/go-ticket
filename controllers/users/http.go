@@ -76,7 +76,7 @@ func (controller *UserController) Login(c echo.Context) error {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	token, err := controller.userUsecase.Login(ctx, userLogin.Email, userLogin.Password)
+	token, err := controller.userUsecase.Login(ctx, userLogin.Email, userLogin.Password, false)
 
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
@@ -151,12 +151,17 @@ func (controller *UserController) HandleGoogle(c echo.Context) error {
 	req := request.Users{}
 	json.NewDecoder(UserInfo.Body).Decode(&req)
 
-	err = controller.userUsecase.Register(ctx, req.ToDomain(), true)
+	controller.userUsecase.Register(ctx, req.ToDomain(), true)
+	tokenLogin, err := controller.userUsecase.Login(ctx, req.Email, "", true)
+
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
+	result := struct {
+		Token string `json:"token"`
+	}{Token: tokenLogin}
 
-	return base_response.NewSuccessResponse(c, "Successfully Login")
+	return base_response.NewSuccessResponse(c, result)
 }
 
 func (controller *UserController) LoginFacebook(c echo.Context) error {
@@ -187,10 +192,16 @@ func (controller *UserController) HandleFacebook(c echo.Context) error {
 	req := request.Users{}
 	json.NewDecoder(UserInfo.Body).Decode(&req)
 
-	err = controller.userUsecase.Register(ctx, req.ToDomain(), true)
+	controller.userUsecase.Register(ctx, req.ToDomain(), true)
+
+	tokenLogin, err := controller.userUsecase.Login(ctx, req.Email, "", true)
+
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
+	result := struct {
+		Token string `json:"token"`
+	}{Token: tokenLogin}
 
-	return base_response.NewSuccessResponse(c, "Successfully Login")
+	return base_response.NewSuccessResponse(c, result)
 }
