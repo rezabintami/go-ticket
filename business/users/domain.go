@@ -6,19 +6,20 @@ import (
 )
 
 type Domain struct {
-	ID        int     
-	Name      string    
-	Password  string  
-	Email     string    
-	Balance   float64  
-	Language  string   
-	CreatedAt time.Time 
+	ID        int
+	Name      string
+	Password  string
+	Email     string
+	Balance   float64
+	Language  string
+	Sso       bool
+	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
 type Usecase interface {
-	Login(ctx context.Context, email, password string) (string, error)
-	Register(ctx context.Context, data *Domain) error
+	Login(ctx context.Context, email, password string,  sso bool) (string, error)
+	Register(ctx context.Context, data *Domain, sso bool) error
 	GetByID(ctx context.Context, id int) (Domain, error)
 	UpdateUser(ctx context.Context, data *Domain, id int) error
 }

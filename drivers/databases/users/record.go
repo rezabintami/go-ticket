@@ -12,6 +12,7 @@ type Users struct {
 	Email     string    `json:"email"`
 	Balance   float64   `json:"balance"`
 	Language  string    `json:"language"`
+	Sso       bool      `json:"-"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -24,6 +25,7 @@ func (rec *Users) toDomain() users.Domain {
 		Balance:   rec.Balance,
 		Email:     rec.Email,
 		Language:  rec.Language,
+		Sso:       rec.Sso,
 		CreatedAt: rec.CreatedAt,
 		UpdatedAt: rec.UpdatedAt,
 	}
@@ -37,6 +39,7 @@ func fromDomain(userDomain users.Domain) *Users {
 		Balance:   userDomain.Balance,
 		Email:     userDomain.Email,
 		Language:  userDomain.Language,
+		Sso:       userDomain.Sso,
 		CreatedAt: userDomain.CreatedAt,
 		UpdatedAt: userDomain.UpdatedAt,
 	}

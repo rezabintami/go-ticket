@@ -8,12 +8,15 @@ import (
 
 type Config struct {
 	Debug  bool
+
 	Server struct {
 		Address string
 	}
+
 	Context struct {
 		Timeout int
 	}
+
 	Mysql struct {
 		Host string
 		Port string
@@ -21,6 +24,7 @@ type Config struct {
 		Pass string
 		Name string
 	}
+
 	Mongo struct {
 		Host string
 		Port string
@@ -28,10 +32,21 @@ type Config struct {
 		Pass string
 		Name string
 	}
-	JWT struct {
-		Secret  string
-		Expired int
-	} `mapstructure:"jwt"`
+
+	Google struct {
+		ClientID string
+		Secret   string
+	}
+
+	Facebook struct {
+		ClientID string
+		Secret   string
+	}
+	
+	// JWT struct {
+	// 	Secret  string
+	// 	Expired int
+	// } `mapstructure:"jwt"`
 }
 
 func GetConfig() Config {

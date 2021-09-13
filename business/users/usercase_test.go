@@ -68,7 +68,7 @@ func TestRegister(t *testing.T) {
 		usersRepository.On("GetByEmail", mock.Anything, mock.Anything).Return(users.Domain{}, nil).Once()
 		usersRepository.On("Register", mock.Anything, mock.Anything).Return(nil).Once()
 
-		err := usersUsecase.Register(context.Background(), &domain)
+		err := usersUsecase.Register(context.Background(), &domain, false)
 
 		assert.Nil(t, err)
 	})
@@ -85,7 +85,7 @@ func TestRegister(t *testing.T) {
 		errRepository := errors.New("duplicate data")
 		usersRepository.On("GetByEmail", mock.Anything, mock.Anything).Return(domain, errRepository).Once()
 
-		err := usersUsecase.Register(context.Background(), &domain)
+		err := usersUsecase.Register(context.Background(), &domain, false)
 
 		assert.Equal(t, err, business.ErrDuplicateData)
 	})
@@ -101,7 +101,7 @@ func TestRegister(t *testing.T) {
 		}
 		usersRepository.On("GetByEmail", mock.Anything, mock.Anything).Return(domain, nil).Once()
 
-		err := usersUsecase.Register(context.Background(), &domain)
+		err := usersUsecase.Register(context.Background(), &domain, false)
 
 		assert.Equal(t, err, business.ErrDuplicateData)
 	})
@@ -134,7 +134,7 @@ func TestRegister(t *testing.T) {
 		usersRepository.On("GetByEmail", mock.Anything, mock.Anything).Return(users.Domain{}, nil).Once()
 		usersRepository.On("Register", mock.Anything, mock.Anything).Return(errRepository).Once()
 
-		err := usersUsecase.Register(context.Background(), &domain)
+		err := usersUsecase.Register(context.Background(), &domain, false)
 
 		assert.Equal(t, err, errRepository)
 	})
@@ -189,7 +189,7 @@ func TestLogin(t *testing.T) {
 
 		usersRepository.On("GetByEmail", mock.Anything, mock.AnythingOfType("string")).Return(usersDomain, nil).Once()
 
-		_, err := usersUsecase.Login(context.Background(), "zaza@gmail.com", "123123")
+		_, err := usersUsecase.Login(context.Background(), "zaza@gmail.com", "123123", false)
 		assert.Nil(t, err)
 	})
 	t.Run("test case 2, password error", func(t *testing.T) {
@@ -205,7 +205,7 @@ func TestLogin(t *testing.T) {
 
 		usersRepository.On("GetByEmail", mock.Anything, mock.AnythingOfType("string")).Return(usersDomain, nil).Once()
 
-		_, err := usersUsecase.Login(context.Background(), "zaza@gmail.com", "123123")
+		_, err := usersUsecase.Login(context.Background(), "zaza@gmail.com", "123123", false)
 		assert.Equal(t, err, business.ErrEmailPasswordNotFound)
 
 	})
@@ -215,7 +215,7 @@ func TestLogin(t *testing.T) {
 		errRepository := errors.New("error record")
 		usersRepository.On("GetByEmail", mock.Anything, mock.AnythingOfType("string")).Return(users.Domain{}, errRepository).Once()
 
-		result, err := usersUsecase.Login(context.Background(), "rezabintami@gmail.com", "123123")
+		result, err := usersUsecase.Login(context.Background(), "rezabintami@gmail.com", "123123", false)
 
 		assert.Equal(t, err, errRepository)
 		assert.Equal(t, "", result)

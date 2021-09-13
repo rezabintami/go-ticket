@@ -60,6 +60,8 @@ func main() {
 		ExpiresDuration: viper.GetInt(`jwt.expired`),
 	}
 
+	
+
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
 
 	e := echo.New()

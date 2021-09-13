@@ -23,13 +23,13 @@ func NewUserUsecase(ur Repository, jwtauth *middleware.ConfigJWT, timeout time.D
 	}
 }
 
-func (uc *UserUsecase) Login(ctx context.Context, email, password string) (string, error) {
+func (uc *UserUsecase) Login(ctx context.Context, email, password string, sso bool) (string, error) {
 	existedUser, err := uc.userRepository.GetByEmail(ctx, email)
 	if err != nil {
 		return "", err
 	}
 	
-	if !encrypt.ValidateHash(password, existedUser.Password) {
+	if !encrypt.ValidateHash(password, existedUser.Password) && !sso {
 		return "", business.ErrEmailPasswordNotFound
 	}
 
@@ -53,7 +53,7 @@ func (uc *UserUsecase) UpdateUser(ctx context.Context, userDomain *Domain, id in
 	return nil
 }
 
-func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain) error {
+func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain, sso bool) error {
 	ctx, cancel := context.WithTimeout(ctx, uc.contextTimeout)
 	defer cancel()
 
@@ -67,7 +67,11 @@ func (uc *UserUsecase) Register(ctx context.Context, userDomain *Domain) error {
 		return business.ErrDuplicateData
 	}
 
-	userDomain.Password, _ = encrypt.Hash(userDomain.Password)
+	if !sso {
+		userDomain.Password, _ = encrypt.Hash(userDomain.Password)
+	}
+	
+	userDomain.Sso = sso
 	
 	err = uc.userRepository.Register(ctx, userDomain)
 	if err != nil {
