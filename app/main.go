@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	_moviesUsecase "ticketing/business/movies"
 	_moviesController "ticketing/controllers/movies"
 	_moviesRepo "ticketing/drivers/databases/movies"
@@ -97,5 +98,9 @@ func main() {
 	}
 	routesInit.RouteRegister(e)
 
-	log.Fatal(e.Start(viper.GetString("server.address")))
+	port := os.Getenv("PORT")
+	if port == "" {
+    port = viper.GetString("server.address") // Default port if not specified
+}
+	log.Fatal(e.Start(":" + port))
 }
