@@ -19,8 +19,8 @@ import (
 
 var (
 	googleOauthConfig = &oauth2.Config{
-		ClientID:     _config.GetConfig().Google.ClientID,
-		ClientSecret: _config.GetConfig().Google.Secret,
+		ClientID:     _config.GetConfig().GOOGLE_AUTH_CLIENT,
+		ClientSecret: _config.GetConfig().GOOGLE_AUTH_SECRET,
 		RedirectURL:  "http://localhost:8000/api/v1/auth/google/callback",
 		Scopes: []string{
 			"https://www.googleapis.com/auth/userinfo.email",
@@ -33,8 +33,8 @@ var (
 
 var (
 	facebookOauthConfig = &oauth2.Config{
-		ClientID:     _config.GetConfig().Facebook.ClientID,
-		ClientSecret: _config.GetConfig().Facebook.Secret,
+		ClientID:     _config.GetConfig().FACEBOOK_AUTH_CLIENT,
+		ClientSecret: _config.GetConfig().FACEBOOK_AUTH_SECRET,
 		RedirectURL:  "http://localhost:8000/api/v1/auth/facebook/callback",
 		Scopes:       []string{"public_profile","email"},
 		Endpoint:     facebook.Endpoint,

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	_moviesUsecase "ticketing/business/movies"
 	_moviesController "ticketing/controllers/movies"
@@ -40,19 +41,23 @@ import (
 func main() {
 	configApp := _config.GetConfig()
 	mysqlConfigDB := _dbMysqlDriver.ConfigDB{
-		DB_Username: configApp.Mysql.User,
-		DB_Password: configApp.Mysql.Pass,
-		DB_Host:     configApp.Mysql.Host,
-		DB_Port:     configApp.Mysql.Port,
-		DB_Database: configApp.Mysql.Name,
+		DB_Username: configApp.MYSQL_DB_USER,
+		DB_Password: configApp.MYSQL_DB_PASS,
+		DB_Host:     configApp.MYSQL_DB_HOST,
+		DB_Port:     configApp.MYSQL_DB_PORT,
+		DB_Database: configApp.MYSQL_DB_NAME,
 	}
 	mongoConfigDB := _dbMongoDriver.ConfigDB{
-		DB_Username: configApp.Mongo.User,
-		DB_Password: configApp.Mongo.Pass,
-		DB_Host:     configApp.Mongo.Host,
-		DB_Port:     configApp.Mongo.Port,
-		DB_Database: configApp.Mongo.Name,
+		DB_Username: configApp.MONGO_DB_USER,
+		DB_Password: configApp.MONGO_DB_PASS,
+		DB_Host:     configApp.MONGO_DB_HOST,
+		DB_Port:     configApp.MONGO_DB_PORT,
+		DB_Database: configApp.MONGO_DB_NAME,
 	}
+	fmt.Println("DEBUG : ", configApp.Debug)
+	fmt.Println("MYSQL : ", configApp.MYSQL_DB_USER)
+	fmt.Println("PORT : ", configApp.SERVER_PORT)
+	fmt.Println("TIMEOUT : ", configApp.SERVER_TIMEOUT)
 	mysql_db := mysqlConfigDB.InitialMysqlDB()
 	_ = mongoConfigDB.InitMongoDB()
 
@@ -60,8 +65,6 @@ func main() {
 		SecretJWT:       viper.GetString(`jwt.secret`),
 		ExpiresDuration: viper.GetInt(`jwt.expired`),
 	}
-
-	
 
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
 
@@ -100,7 +103,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-    port = viper.GetString("server.address") // Default port if not specified
-}
+		port =configApp.SERVER_PORT
+	}
 	log.Fatal(e.Start(":" + port))
 }
