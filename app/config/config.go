@@ -41,8 +41,6 @@ func GetConfig() Config {
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		viper.BindEnv(GetConfig().SERVER_PORT)
-
 		viper.BindEnv(GetConfig().MYSQL_DB_HOST)
 		viper.BindEnv(GetConfig().MYSQL_DB_PORT)
 		viper.BindEnv(GetConfig().MYSQL_DB_USER)
