@@ -41,7 +41,20 @@ func GetConfig() Config {
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		viper.AutomaticEnv()
+		viper.BindEnv(GetConfig().SERVER_PORT)
+
+		viper.BindEnv(GetConfig().MYSQL_DB_HOST)
+		viper.BindEnv(GetConfig().MYSQL_DB_PORT)
+		viper.BindEnv(GetConfig().MYSQL_DB_USER)
+		viper.BindEnv(GetConfig().MYSQL_DB_PASS)
+		viper.BindEnv(GetConfig().MYSQL_DB_NAME)
+
+		viper.BindEnv(GetConfig().FACEBOOK_AUTH_CLIENT)
+		viper.BindEnv(GetConfig().FACEBOOK_AUTH_SECRET)
+
+		viper.BindEnv(GetConfig().GOOGLE_AUTH_CLIENT)
+		viper.BindEnv(GetConfig().GOOGLE_AUTH_SECRET)
+
 	}
 
 	var c Config
