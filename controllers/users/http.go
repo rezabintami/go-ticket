@@ -21,7 +21,7 @@ var (
 	googleOauthConfig = &oauth2.Config{
 		ClientID:     _config.GetConfig().GOOGLE_AUTH_CLIENT,
 		ClientSecret: _config.GetConfig().GOOGLE_AUTH_SECRET,
-		RedirectURL:  "http://localhost:8000/api/v1/auth/google/callback",
+		RedirectURL:  "https://movie-ticketing-test.herokuapp.com/api/v1/auth/google/callback",
 		Scopes: []string{
 			"https://www.googleapis.com/auth/userinfo.email",
 			"https://www.googleapis.com/auth/userinfo.profile",
@@ -35,7 +35,7 @@ var (
 	facebookOauthConfig = &oauth2.Config{
 		ClientID:     _config.GetConfig().FACEBOOK_AUTH_CLIENT,
 		ClientSecret: _config.GetConfig().FACEBOOK_AUTH_SECRET,
-		RedirectURL:  "http://localhost:8000/api/v1/auth/facebook/callback",
+		RedirectURL:  "https://movie-ticketing-test.herokuapp.com/api/v1/auth/facebook/callback",
 		Scopes:       []string{"public_profile","email"},
 		Endpoint:     facebook.Endpoint,
 	}
