@@ -8,8 +8,8 @@ type Config struct {
 	Debug bool `mapstructure:"DEBUG"`
 
 	//! Server
-	SERVER_PORT string `mapstructure:"SERVER_PORT"`
-	SERVER_TIMEOUT int `mapstructure:"SERVER_TIMEOUT"`
+	SERVER_PORT    string `mapstructure:"SERVER_PORT"`
+	SERVER_TIMEOUT int    `mapstructure:"SERVER_TIMEOUT"`
 
 	//! MYSQL
 	MYSQL_DB_HOST string `mapstructure:"MYSQL_DB_HOST"`
@@ -38,12 +38,10 @@ func GetConfig() Config {
 	viper.AddConfigPath(".")
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
-	viper.AutomaticEnv()
 
 	err := viper.ReadInConfig()
 	if err != nil {
-			viper.BindEnv()
-
+		viper.AutomaticEnv()
 	}
 
 	var c Config
