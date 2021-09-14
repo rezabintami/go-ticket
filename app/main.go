@@ -101,8 +101,8 @@ func main() {
 	routesInit.RouteRegister(e)
 
 	port := os.Getenv("PORT")
-	// if port == "" {
-	// 	port =configApp.SERVER_PORT
-	// }
+	if port == "" {
+		port = "8000"
+	}
 	log.Fatal(e.Start(":" + port))
 }
