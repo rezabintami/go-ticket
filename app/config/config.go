@@ -35,29 +35,29 @@ type Config struct {
 }
 
 func GetConfig() Config {
+	var conf Config
+
 	viper.AddConfigPath(".")
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		viper.BindEnv(GetConfig().MYSQL_DB_HOST)
-		viper.BindEnv(GetConfig().MYSQL_DB_PORT)
-		viper.BindEnv(GetConfig().MYSQL_DB_USER)
-		viper.BindEnv(GetConfig().MYSQL_DB_PASS)
-		viper.BindEnv(GetConfig().MYSQL_DB_NAME)
+		viper.BindEnv(conf.MYSQL_DB_HOST)
+		viper.BindEnv(conf.MYSQL_DB_PORT)
+		viper.BindEnv(conf.MYSQL_DB_USER)
+		viper.BindEnv(conf.MYSQL_DB_PASS)
+		viper.BindEnv(conf.MYSQL_DB_NAME)
 
 		viper.BindEnv(GetConfig().FACEBOOK_AUTH_CLIENT)
 		viper.BindEnv(GetConfig().FACEBOOK_AUTH_SECRET)
 
 		viper.BindEnv(GetConfig().GOOGLE_AUTH_CLIENT)
 		viper.BindEnv(GetConfig().GOOGLE_AUTH_SECRET)
-
 	}
 
-	var c Config
-	if err := viper.Unmarshal(&c); err != nil {
+	if err := viper.Unmarshal(&conf); err != nil {
 		panic(err)
 	}
-	return c
+	return conf
 }
