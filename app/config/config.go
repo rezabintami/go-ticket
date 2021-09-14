@@ -38,12 +38,12 @@ func GetConfig() Config {
 	viper.AddConfigPath(".")
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
-
 	viper.AutomaticEnv()
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(err)
+			viper.BindEnv()
+
 	}
 
 	var c Config
