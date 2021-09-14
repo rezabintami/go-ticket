@@ -25,7 +25,6 @@ import (
 	_topupRepo "ticketing/drivers/databases/topup"
 
 	_config "ticketing/app/config"
-	_dbMongoDriver "ticketing/drivers/mongodb"
 	_dbMysqlDriver "ticketing/drivers/mysql"
 
 	_middleware "ticketing/app/middleware"
@@ -47,19 +46,19 @@ func main() {
 		DB_Port:     configApp.MYSQL_DB_PORT,
 		DB_Database: configApp.MYSQL_DB_NAME,
 	}
-	mongoConfigDB := _dbMongoDriver.ConfigDB{
-		DB_Username: configApp.MONGO_DB_USER,
-		DB_Password: configApp.MONGO_DB_PASS,
-		DB_Host:     configApp.MONGO_DB_HOST,
-		DB_Port:     configApp.MONGO_DB_PORT,
-		DB_Database: configApp.MONGO_DB_NAME,
-	}
+	// mongoConfigDB := _dbMongoDriver.ConfigDB{
+	// 	DB_Username: configApp.MONGO_DB_USER,
+	// 	DB_Password: configApp.MONGO_DB_PASS,
+	// 	DB_Host:     configApp.MONGO_DB_HOST,
+	// 	DB_Port:     configApp.MONGO_DB_PORT,
+	// 	DB_Database: configApp.MONGO_DB_NAME,
+	// }
 	fmt.Println("DEBUG : ", configApp.Debug)
 	fmt.Println("MYSQL : ", configApp.MYSQL_DB_USER)
 	fmt.Println("PORT : ", configApp.SERVER_PORT)
 	fmt.Println("TIMEOUT : ", configApp.SERVER_TIMEOUT)
 	mysql_db := mysqlConfigDB.InitialMysqlDB()
-	_ = mongoConfigDB.InitMongoDB()
+	// _ = mongoConfigDB.InitMongoDB()
 
 	configJWT := _middleware.ConfigJWT{
 		SecretJWT:       viper.GetString(`jwt.secret`),
