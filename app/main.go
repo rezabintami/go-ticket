@@ -104,5 +104,5 @@ func main() {
 	if port == "" {
 		port = "8000"
 	}
-	log.Fatal(e.Start(":" + port))
+	log.Fatal(e.Start("0.0.0.0:" + port))
 }
