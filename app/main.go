@@ -35,7 +35,6 @@ import (
 	"time"
 
 	echo "github.com/labstack/echo/v4"
-	"github.com/spf13/viper"
 )
 
 func main() {
@@ -62,11 +61,11 @@ func main() {
 	// _ = mongoConfigDB.InitMongoDB()
 
 	configJWT := _middleware.ConfigJWT{
-		SecretJWT:       viper.GetString(`jwt.secret`),
-		ExpiresDuration: viper.GetInt(`jwt.expired`),
+		SecretJWT:       configApp.JWT_SECRET,
+		ExpiresDuration: configApp.JWT_EXPIRED,
 	}
 
-	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
+	timeoutContext := time.Duration(configApp.JWT_EXPIRED) * time.Second
 
 	e := echo.New()
 

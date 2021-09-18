@@ -38,10 +38,11 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	e.Renderer = t
 	apiV1 := e.Group("/api/v1")
 
-	apiV1.Use(_middleware.MiddlewareLogging)
+	e.Use(_middleware.MiddlewareLogging)
 
 	//! TOPUP
-	apiV1.POST("/topup", cl.TopUpController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.GET("/topup/payment", cl.TopUpController.CreateTransaction, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.POST("/topup/payment/callback", cl.TopUpController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
 	apiV1.GET("/topup", cl.TopUpController.GetByID, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	//! USERS
@@ -70,12 +71,13 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 
 	//! OAUTH2
 	auth.GET("/login/oauth", cl.UserController.OauthLogin)
+
 	//! GOOGLE
 	auth.GET("/google", cl.UserController.LoginGoogle)
 	auth.GET("/google/callback", cl.UserController.HandleGoogle)
+
 	//! FACEBOOK
 	auth.GET("/facebook", cl.UserController.LoginFacebook)
 	auth.GET("/facebook/callback", cl.UserController.HandleFacebook)
-
 
 }

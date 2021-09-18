@@ -14,8 +14,9 @@ type Domain struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
 type Usecase interface {
-	CreateTransactions(ctx context.Context, data *payments.Domain) error
+	CreateTransactions(ctx context.Context, data *payments.Domain) (payments.DomainResponse, error)
 	Store(ctx context.Context, data *Domain) error
 	GetByID(ctx context.Context, id int) ([]Domain, error)
 }
