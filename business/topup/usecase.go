@@ -8,33 +8,31 @@ import (
 )
 
 type TopupUsecase struct {
-	topupRepository Repository
-	userRepository  users.Repository
+	topupRepository    Repository
+	userRepository     users.Repository
 	paymentsRepository payments.Repository
-	contextTimeout time.Duration
+	contextTimeout     time.Duration
 }
 
 func NewTopUpUsecase(tr Repository, timeout time.Duration, us users.Repository, pay payments.Repository) Usecase {
 	return &TopupUsecase{
-		topupRepository: tr,
-		contextTimeout:  timeout,
-		userRepository:  us,
+		topupRepository:    tr,
+		contextTimeout:     timeout,
+		userRepository:     us,
 		paymentsRepository: pay,
 	}
 }
 
-func (tu *TopupUsecase) CreateTransactions(ctx context.Context, paymentsDomain *payments.Domain) error {
+func (tu *TopupUsecase) CreateTransactions(ctx context.Context, paymentsDomain *payments.Domain) (payments.DomainResponse, error) {
 	//!MIDTRANS
-	tu.paymentsRepository.Transactions(ctx, paymentsDomain)
-
-	return nil
+	result, err := tu.paymentsRepository.Transactions(ctx, paymentsDomain)
+	if err != nil {
+		return payments.DomainResponse{}, err
+	}
+	return result, nil
 }
 
-
-
 func (tu *TopupUsecase) Store(ctx context.Context, topupDomain *Domain) error {
-	//!MIDTRANS
-
 	err := tu.topupRepository.Store(ctx, topupDomain)
 	if err != nil {
 		return err
@@ -59,4 +57,3 @@ func (tu *TopupUsecase) GetByID(ctx context.Context, id int) ([]Domain, error) {
 
 	return result, nil
 }
-

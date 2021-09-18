@@ -34,7 +34,10 @@ func (tm *TransactionMidtrans) Transactions(ctx context.Context, transactionDoma
 		},
 	}
 
-	snapResp, _ := tm.snapClient.CreateTransaction(req)
+	snapResp, err := tm.snapClient.CreateTransaction(req)
+	if err != nil {
+		return payments.DomainResponse{}, err.RawError
+	}
 	data := fromDomain(*snapResp)
 	respDomain := toDomain(*data)
 	return respDomain, nil

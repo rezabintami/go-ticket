@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"strconv"
 
 	"github.com/spf13/viper"
 )
@@ -39,6 +40,10 @@ type Config struct {
 	MIDTRANS_SERVER_KEY string `mapstructure:"MIDTRANS_SERVER_KEY"`
 	MIDTRANS_CLIENT_KEY string `mapstructure:"MIDTRANS_CLIENT_KEY"`
 	MIDTRANS_MERCHANT_ID string `mapstructure:"MIDTRANS_MERCHANT_ID"`
+
+	//! JWT
+	JWT_SECRET string `mapstructure:"JWT_SECRET"`
+	JWT_EXPIRED int `mapstructure:"JWT_EXPIRED"`
 }
 
 func GetConfig() Config {
@@ -77,6 +82,9 @@ func GetConfig() Config {
 		conf.MIDTRANS_SERVER_KEY = os.Getenv("MIDTRANS_SERVER_KEY")
 		conf.MIDTRANS_CLIENT_KEY = os.Getenv("MIDTRANS_CLIENT_KEY")
 		conf.MIDTRANS_MERCHANT_ID = os.Getenv("MIDTRANS_MERCHANT_ID")
+
+		conf.JWT_SECRET = os.Getenv("JWT_SECRET")
+		conf.JWT_EXPIRED,_ = strconv.Atoi(os.Getenv("JWT_EXPIRED"))
 	}
 
 	if err := viper.Unmarshal(&conf); err != nil {
