@@ -23,6 +23,7 @@ import (
 	_topupUsecase "ticketing/business/topup"
 	_topupController "ticketing/controllers/topup"
 	_topupRepo "ticketing/drivers/databases/topup"
+	_midtrans "ticketing/drivers/thirdparties/midtrans"
 
 	_config "ticketing/app/config"
 	_dbMysqlDriver "ticketing/drivers/mysql"
@@ -73,8 +74,9 @@ func main() {
 	userUsecase := _userUsecase.NewUserUsecase(userRepo, &configJWT, timeoutContext)
 	userCtrl := _userController.NewUserController(userUsecase)
 
+	MidtransRepo := _midtrans.NewTransactionMidtrans()
 	topupRepo := _topupRepo.NewMySQLTopUpRepository(mysql_db)
-	topupUsecase := _topupUsecase.NewTopUpUsecase(topupRepo, timeoutContext, userRepo)
+	topupUsecase := _topupUsecase.NewTopUpUsecase(topupRepo, timeoutContext, userRepo, MidtransRepo)
 	topupCtrl := _topupController.NewTopUpController(topupUsecase)
 
 	theaterRepo := _theaterRepo.NewMySQLTheaterRepository(mysql_db)
