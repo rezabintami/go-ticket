@@ -164,6 +164,7 @@ func (controller *UserController) HandleGoogle(c echo.Context) error {
 	return base_response.NewSuccessResponse(c, result)
 }
 
+//! OAuth2 Facebook
 func (controller *UserController) LoginFacebook(c echo.Context) error {
 	url := facebookOauthConfig.AuthCodeURL(facebookrandomstate)
 	c.Redirect(http.StatusTemporaryRedirect, url)

@@ -2,6 +2,7 @@ package topup
 
 import (
 	"context"
+	"ticketing/business/payments"
 	"time"
 )
 
@@ -14,6 +15,7 @@ type Domain struct {
 	UpdatedAt time.Time
 }
 type Usecase interface {
+	CreateTransactions(ctx context.Context, data *payments.Domain) error
 	Store(ctx context.Context, data *Domain) error
 	GetByID(ctx context.Context, id int) ([]Domain, error)
 }

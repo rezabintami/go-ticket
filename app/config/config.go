@@ -34,6 +34,11 @@ type Config struct {
 	//! OAUTH2 FACEBOOK
 	FACEBOOK_AUTH_CLIENT string `mapstructure:"FACEBOOK_AUTH_CLIENT"`
 	FACEBOOK_AUTH_SECRET string `mapstructure:"FACEBOOK_AUTH_SECRET"`
+
+	//! MIDTRANS
+	MIDTRANS_SERVER_KEY string `mapstructure:"MIDTRANS_SERVER_KEY"`
+	MIDTRANS_CLIENT_KEY string `mapstructure:"MIDTRANS_CLIENT_KEY"`
+	MIDTRANS_MERCHANT_ID string `mapstructure:"MIDTRANS_MERCHANT_ID"`
 }
 
 func GetConfig() Config {
@@ -56,7 +61,7 @@ func GetConfig() Config {
 
 		// viper.BindEnv(conf.GOOGLE_AUTH_CLIENT)
 		// viper.BindEnv(conf.GOOGLE_AUTH_SECRET)
-		
+
 		conf.MYSQL_DB_HOST = os.Getenv("MYSQL_DB_HOST")
 		conf.MYSQL_DB_PORT = os.Getenv("MYSQL_DB_PORT")
 		conf.MYSQL_DB_USER = os.Getenv("MYSQL_DB_USER")
@@ -68,6 +73,10 @@ func GetConfig() Config {
 
 		conf.GOOGLE_AUTH_CLIENT = os.Getenv("GOOGLE_AUTH_CLIENT")
 		conf.GOOGLE_AUTH_SECRET = os.Getenv("GOOGLE_AUTH_SECRET")
+
+		conf.MIDTRANS_SERVER_KEY = os.Getenv("MIDTRANS_SERVER_KEY")
+		conf.MIDTRANS_CLIENT_KEY = os.Getenv("MIDTRANS_CLIENT_KEY")
+		conf.MIDTRANS_MERCHANT_ID = os.Getenv("MIDTRANS_MERCHANT_ID")
 	}
 
 	if err := viper.Unmarshal(&conf); err != nil {
