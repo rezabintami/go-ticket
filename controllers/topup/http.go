@@ -1,6 +1,7 @@
 package topup
 
 import (
+	"fmt"
 	"net/http"
 	"ticketing/app/middleware"
 	"ticketing/business/topup"
@@ -44,11 +45,12 @@ func (ctrl *TopUpController) CreateTransaction(c echo.Context) error {
 func (ctrl *TopUpController) TransactionCallbackHandler(c echo.Context) error {
 	ctx := c.Request().Context()
 
+	fmt.Println("HANDLER : START")
 	req := request.MidtransCallback{}
 	if err := c.Bind(&req); err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
-
+	fmt.Println("HANDLER : SUCCESS GET CALLBACK RESPONSE")
 	err := ctrl.topupUsecase.Update(ctx, req.HandlerToDomain())
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)

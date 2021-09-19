@@ -56,3 +56,12 @@ func (repository *mysqlTopUpRepository) GetByID(ctx context.Context, id int) ([]
 	}
 	return historyTopup, nil
 }
+
+func (repository *mysqlTopUpRepository) GetByOrder(ctx context.Context, orderId string) (topup.Domain, error) {
+	top := Topup{}
+	result := repository.Conn.Where("order_id = ?", orderId).Find(&top)
+	if result.Error != nil {
+		return topup.Domain{}, result.Error
+	}
+	return top.toDomain(), nil
+}
