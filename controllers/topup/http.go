@@ -32,8 +32,8 @@ func (ctrl *TopUpController) CreateTransaction(c echo.Context) error {
 	}
 
 	req.OrderID = guid.GenerateUUID()
-	
-	resp, err := ctrl.topupUsecase.CreateTransactions(ctx, req.ToPaymentDomain(), req.ToDomain(), id)
+
+	resp, err := ctrl.topupUsecase.CreateTransactions(ctx, req.ToDomain(), id)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
@@ -41,15 +41,15 @@ func (ctrl *TopUpController) CreateTransaction(c echo.Context) error {
 	return base_response.NewSuccessResponse(c, response.FromPaymentDomain(resp))
 }
 
-func (ctrl *TopUpController) Store(c echo.Context) error {
+func (ctrl *TopUpController) TransactionCallbackHandler(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	req := request.TopUp{}
+	req := request.MidtransCallback{}
 	if err := c.Bind(&req); err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	err := ctrl.topupUsecase.Store(ctx, req.ToDomain())
+	err := ctrl.topupUsecase.Update(ctx, req.HandlerToDomain())
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
