@@ -36,9 +36,9 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 		templates: template.Must(template.ParseGlob("public/view/*.html")),
 	}
 	e.Renderer = t
-	apiV1 := e.Group("/api/v1")
-
 	e.Use(_middleware.MiddlewareLogging)
+
+	apiV1 := e.Group("/api/v1")
 
 	//! TOPUP
 	apiV1.GET("/topup/payment", cl.TopUpController.CreateTransaction, middleware.JWTWithConfig(cl.JWTMiddleware))
