@@ -42,7 +42,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 
 	//! TOPUP
 	apiV1.GET("/topup/payment", cl.TopUpController.CreateTransaction, middleware.JWTWithConfig(cl.JWTMiddleware))
-	apiV1.POST("/topup/payment/callback", cl.TopUpController.Store, middleware.JWTWithConfig(cl.JWTMiddleware))
+	apiV1.POST("/topup/payment/callback", cl.TopUpController.TransactionCallbackHandler, middleware.JWTWithConfig(cl.JWTMiddleware))
 	apiV1.GET("/topup", cl.TopUpController.GetByID, middleware.JWTWithConfig(cl.JWTMiddleware))
 
 	//! USERS

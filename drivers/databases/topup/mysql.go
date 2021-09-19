@@ -25,13 +25,23 @@ func (repository *mysqlTopUpRepository) Store(ctx context.Context, topupDomain *
 	if result.Error != nil {
 		return payments.Domain{}, result.Error
 	}
-	
+
 	err := repository.Conn.Preload("User").First(&rec, rec.ID).Error
 	if err != nil {
 		return payments.Domain{}, result.Error
 	}
 
 	return rec.toPaymentDomain(), nil
+}
+
+func (repository *mysqlTopUpRepository) Update(ctx context.Context, topupDomain *topup.Domain) error {
+	rec := fromDomain(*topupDomain)
+
+	result := repository.Conn.Where("order_id = ?", rec.OrderID).Updates(&rec)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }
 
 func (repository *mysqlTopUpRepository) GetByID(ctx context.Context, id int) ([]topup.Domain, error) {
