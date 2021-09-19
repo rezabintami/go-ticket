@@ -21,4 +21,5 @@ type DomainResponse struct {
 
 type Repository interface {
 	Transactions(ctx context.Context, data *Domain) (DomainResponse, error)
+	NotificationValidationKey() string
 }

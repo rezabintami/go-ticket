@@ -65,12 +65,14 @@ func (req *TopUp) ToDomain() *topup.Domain {
 }
 
 func (req *MidtransCallback) HandlerToDomain() *topup.Domain {
-	price, _ := strconv.ParseFloat(req.GrossAmount, 64)
+	price, _ := strconv.ParseFloat(req.GrossAmount, 32)
 	return &topup.Domain{
 		Amount:      price,
 		OrderID:     req.OrderID,
 		Status:      req.TransactionStatus,
 		PaymentName: req.PaymentType,
 		FraudStatus: req.FraudStatus,
+		StatusCode:  req.StatusCode,
+		SignKey:     req.SignKey,
 	}
 }

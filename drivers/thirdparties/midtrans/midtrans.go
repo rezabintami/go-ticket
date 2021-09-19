@@ -49,3 +49,8 @@ func (tm *TransactionMidtrans) Transactions(ctx context.Context, transactionDoma
 	respDomain := toDomain(*data)
 	return respDomain, nil
 }
+
+
+func (tm *TransactionMidtrans) NotificationValidationKey() string {
+	return tm.midClient.ServerKey
+}
