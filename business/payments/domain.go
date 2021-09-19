@@ -4,20 +4,19 @@ import "context"
 
 type Domain struct {
 	ID          int
-	Title       string
-	MovieID		int64
-	Language    string
-	Description string
-	Path        string
-	VoteAverage float64
-	VoteCount   int64
+	UserID      int
+	OrderID     string
+	PaymentName string
+	Name        string
+	Email       string
+	Amount      float64
 }
 
 type DomainResponse struct {
-	Token         string   
-	RedirectURL   string   
-	StatusCode    string  
-	ErrorMessages []string 
+	Token         string
+	RedirectURL   string
+	StatusCode    string
+	ErrorMessages []string
 }
 
 type Repository interface {

@@ -23,29 +23,37 @@ func NewTopUpUsecase(tr Repository, timeout time.Duration, us users.Repository, 
 	}
 }
 
-func (tu *TopupUsecase) CreateTransactions(ctx context.Context, paymentsDomain *payments.Domain) (payments.DomainResponse, error) {
+func (tu *TopupUsecase) CreateTransactions(ctx context.Context, paymentsDomain *payments.Domain, topupDomain *Domain, id int) (payments.DomainResponse, error) {
 	//!MIDTRANS
-	result, err := tu.paymentsRepository.Transactions(ctx, paymentsDomain)
+	paymentsDomain.UserID = id
+	topupDomain.UserID = id
+
+	result, err := tu.topupRepository.Store(ctx, topupDomain)
 	if err != nil {
 		return payments.DomainResponse{}, err
 	}
-	return result, nil
+
+	response, err := tu.paymentsRepository.Transactions(ctx, &result)
+	if err != nil {
+		return payments.DomainResponse{}, err
+	}
+
+	return response, nil
 }
 
 func (tu *TopupUsecase) Store(ctx context.Context, topupDomain *Domain) error {
-	err := tu.topupRepository.Store(ctx, topupDomain)
-	if err != nil {
-		return err
-	}
-	result, err := tu.userRepository.GetByID(ctx, topupDomain.UserID)
-	if err != nil {
-		return err
-	}
-	err = tu.userRepository.UpdateUser(ctx, &users.Domain{Balance: result.Balance + topupDomain.Balance}, topupDomain.UserID)
-	if err != nil {
-		return err
-	}
-
+	// err := tu.topupRepository.Store(ctx, topupDomain)
+	// if err != nil {
+	// 	return err
+	// }
+	// result, err := tu.userRepository.GetByID(ctx, topupDomain.UserID)
+	// if err != nil {
+	// 	return err
+	// }
+	// err = tu.userRepository.UpdateUser(ctx, &users.Domain{Amount: result.Amount + topupDomain.Amount}, topupDomain.UserID)
+	// if err != nil {
+	// 	return err
+	// }
 	return nil
 }
 

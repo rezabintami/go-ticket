@@ -3,7 +3,7 @@ package midtrans
 import (
 	"ticketing/business/payments"
 
-	"github.com/midtrans/midtrans-go/snap"
+	"github.com/veritrans/go-midtrans"
 )
 
 type Response struct {
@@ -22,7 +22,7 @@ func toDomain(resp Response) payments.DomainResponse {
 	}
 }
 
-func fromDomain(snapResp snap.Response) *Response {
+func fromDomain(snapResp midtrans.SnapResponse) *Response {
 	return &Response{
 		Token:         snapResp.Token,
 		RedirectURL:   snapResp.RedirectURL,
