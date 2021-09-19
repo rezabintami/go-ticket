@@ -6,7 +6,7 @@ type Users struct {
 	Name     string  `json:"name"`
 	Password string  `json:"password,omitempty"`
 	Email    string  `json:"email"`
-	Balance  float64 `json:"balance"`
+	Amount  float64 `json:"amount"`
 	Language string  `json:"language"`
 }
 
@@ -15,7 +15,7 @@ func (req *Users) ToDomain() *users.Domain {
 		Name:     req.Name,
 		Password: req.Password,
 		Email:    req.Email,
-		Balance:  req.Balance,
+		Amount:  req.Amount,
 		Language: req.Language,
 	}
 }

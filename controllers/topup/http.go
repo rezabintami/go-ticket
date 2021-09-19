@@ -3,10 +3,10 @@ package topup
 import (
 	"net/http"
 	"ticketing/app/middleware"
-	"ticketing/business/payments"
 	"ticketing/business/topup"
 	"ticketing/controllers/topup/request"
 	"ticketing/controllers/topup/response"
+	"ticketing/helper/guid"
 	base_response "ticketing/helper/response"
 
 	echo "github.com/labstack/echo/v4"
@@ -24,18 +24,21 @@ func NewTopUpController(tc topup.Usecase) *TopUpController {
 
 func (ctrl *TopUpController) CreateTransaction(c echo.Context) error {
 	ctx := c.Request().Context()
+	id := middleware.GetUserId(c)
 
-	// req := request.TopUp{}
-	// if err := c.Bind(&req); err != nil {
-	// 	return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
-	// }
+	req := request.TopUp{}
+	if err := c.Bind(&req); err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
 
-	resp,err := ctrl.topupUsecase.CreateTransactions(ctx, &payments.Domain{})
+	req.OrderID = guid.GenerateUUID()
+	
+	resp, err := ctrl.topupUsecase.CreateTransactions(ctx, req.ToPaymentDomain(), req.ToDomain(), id)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return base_response.NewSuccessResponse(c, resp)
+	return base_response.NewSuccessResponse(c, response.FromPaymentDomain(resp))
 }
 
 func (ctrl *TopUpController) Store(c echo.Context) error {

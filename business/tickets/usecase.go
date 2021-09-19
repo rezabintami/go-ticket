@@ -37,7 +37,7 @@ func (tu *TicketsUsecase) Store(ctx context.Context, ticketDomain *Domain, id in
 		return err
 	}
 
-	err = tu.userRepository.UpdateUser(ctx, &users.Domain{Balance: result.Balance - ticketDomain.TotalPrice}, id)
+	err = tu.userRepository.UpdateUser(ctx, &users.Domain{Amount: result.Amount - ticketDomain.TotalPrice}, id)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (tu *TicketsUsecase) Delete(ctx context.Context, id int, userId int) error 
 		return err
 	}
 
-	err = tu.userRepository.UpdateUser(ctx, &users.Domain{Balance: result.Balance + (res.TotalPrice * 0.9)}, userId)
+	err = tu.userRepository.UpdateUser(ctx, &users.Domain{Amount: result.Amount + (res.TotalPrice * 0.9)}, userId)
 	if err != nil {
 		return err
 	}

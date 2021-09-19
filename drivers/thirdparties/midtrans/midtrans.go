@@ -5,40 +5,47 @@ import (
 	_config "ticketing/app/config"
 	"ticketing/business/payments"
 
-	"github.com/midtrans/midtrans-go"
-	"github.com/midtrans/midtrans-go/snap"
+	"github.com/veritrans/go-midtrans"
 )
 
 type TransactionMidtrans struct {
-	snapClient snap.Client
+	midClient midtrans.Client
 }
 
 func NewTransactionMidtrans() payments.Repository {
 	return &TransactionMidtrans{
-		snapClient: snap.Client{},
+		midClient: midtrans.Client{},
 	}
 }
 
 func (tm *TransactionMidtrans) Transactions(ctx context.Context, transactionDomain *payments.Domain) (payments.DomainResponse, error) {
-	tm.snapClient.New(_config.GetConfig().MIDTRANS_SERVER_KEY, midtrans.Sandbox)
+	tm.midClient.ServerKey = _config.GetConfig().MIDTRANS_SERVER_KEY
+	tm.midClient.ClientKey = _config.GetConfig().MIDTRANS_CLIENT_KEY
+	tm.midClient.APIEnvType = midtrans.Sandbox
 
-	req := &snap.Request{
+	snapGateway := midtrans.SnapGateway{
+		Client: tm.midClient,
+	}
+
+	req := &midtrans.SnapReq{
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID: "YOUR-ORDER-ID-12345", GrossAmt: 100000},
-		CreditCard: &snap.CreditCardDetails{Secure: true},
-		CustomerDetail: &midtrans.CustomerDetails{
-			FName: "John",
-			LName: "Doe",
-			Email: "john@doe.com",
-			Phone: "081234567890",
+			OrderID:  transactionDomain.OrderID,
+			GrossAmt: int64(transactionDomain.Amount),
+		},
+		CreditCard: &midtrans.CreditCardDetail{
+			Secure: true,
+		},
+		CustomerDetail: &midtrans.CustDetail{
+			FName: transactionDomain.Name,
+			Email: transactionDomain.Email,
 		},
 	}
 
-	snapResp, err := tm.snapClient.CreateTransaction(req)
+	snapTokenResponse, err := snapGateway.GetToken(req)
 	if err != nil {
-		return payments.DomainResponse{}, err.RawError
+		return payments.DomainResponse{}, err
 	}
-	data := fromDomain(*snapResp)
+	data := fromDomain(snapTokenResponse)
 	respDomain := toDomain(*data)
 	return respDomain, nil
 }
