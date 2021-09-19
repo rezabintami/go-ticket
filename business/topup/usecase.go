@@ -2,6 +2,7 @@ package topup
 
 import (
 	"context"
+	"fmt"
 	"ticketing/business/payments"
 	"ticketing/business/users"
 	"time"
@@ -48,20 +49,24 @@ func (tu *TopupUsecase) Update(ctx context.Context, topupDomain *Domain) error {
 	} else if topupDomain.Status == "deny" || topupDomain.Status == "expire" || topupDomain.Status == "cancel" {
 		topupDomain.Status = "canceled"
 	}
-
+	fmt.Println("HANDLER : ", topupDomain.Status)
+	fmt.Println("HANDLER : START UPDATE DB TOPUP")
 	err := tu.topupRepository.Update(ctx, topupDomain)
 	if err != nil {
+		fmt.Println("HANDLER : FAILED UPDATE DB TOPUP")
 		return err
 	}
-	
+
 	if topupDomain.Status == "paid" {
-		result, err := tu.userRepository.GetByID(ctx, topupDomain.UserID)
+		fmt.Println("HANDLER : START GET DATA TOPUP")
+		result, err := tu.topupRepository.GetByOrder(ctx, topupDomain.OrderID)
 		if err != nil {
 			return err
 		}
-
-		err = tu.userRepository.UpdateUser(ctx, &users.Domain{Amount: result.Amount + topupDomain.Amount}, topupDomain.UserID)
+		fmt.Println("HANDLER : START UPDATE DB USERS")
+		err = tu.userRepository.UpdateUser(ctx, &users.Domain{Amount: +topupDomain.Amount}, result.UserID)
 		if err != nil {
+			fmt.Println("HANDLER : FAILED UPDATE DB USERS")
 			return err
 		}
 	}
