@@ -14,6 +14,8 @@ type Domain struct {
 	PaymentName string
 	Name        string
 	Amount      float64
+	StatusCode  string
+	SignKey     string
 	Status      string
 	PaymentUrl  string
 	CreatedAt   time.Time

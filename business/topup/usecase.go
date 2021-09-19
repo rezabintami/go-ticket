@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"ticketing/business/payments"
 	"ticketing/business/users"
+	"ticketing/helper/statuskey"
 	"time"
 )
 
@@ -49,24 +50,26 @@ func (tu *TopupUsecase) Update(ctx context.Context, topupDomain *Domain) error {
 	} else if topupDomain.Status == "deny" || topupDomain.Status == "expire" || topupDomain.Status == "cancel" {
 		topupDomain.Status = "canceled"
 	}
-	fmt.Println("HANDLER : ", topupDomain.Status)
-	fmt.Println("HANDLER : START UPDATE DB TOPUP")
+	if err := statuskey.IsValid(topupDomain.OrderID, topupDomain.StatusCode, fmt.Sprintf("%.2f", topupDomain.Amount), topupDomain.SignKey, tu.paymentsRepository.NotificationValidationKey()); err != nil {
+		return err
+	}
+
 	err := tu.topupRepository.Update(ctx, topupDomain)
 	if err != nil {
-		fmt.Println("HANDLER : FAILED UPDATE DB TOPUP")
 		return err
 	}
 
 	if topupDomain.Status == "paid" {
-		fmt.Println("HANDLER : START GET DATA TOPUP")
 		result, err := tu.topupRepository.GetByOrder(ctx, topupDomain.OrderID)
 		if err != nil {
 			return err
 		}
-		fmt.Println("HANDLER : START UPDATE DB USERS")
-		err = tu.userRepository.UpdateUser(ctx, &users.Domain{Amount: +topupDomain.Amount}, result.UserID)
+		account, err := tu.userRepository.GetByID(ctx, result.UserID)
 		if err != nil {
-			fmt.Println("HANDLER : FAILED UPDATE DB USERS")
+			return err
+		}
+		err = tu.userRepository.UpdateUser(ctx, &users.Domain{Amount: account.Amount + topupDomain.Amount}, result.UserID)
+		if err != nil {
 			return err
 		}
 	}
