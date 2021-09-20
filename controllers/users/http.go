@@ -19,9 +19,9 @@ import (
 
 var (
 	googleOauthConfig = &oauth2.Config{
-		ClientID:     _config.GetConfig().Google.ClientID,
-		ClientSecret: _config.GetConfig().Google.Secret,
-		RedirectURL:  "http://localhost:8000/api/v1/auth/google/callback",
+		ClientID:     _config.GetConfig().GOOGLE_AUTH_CLIENT,
+		ClientSecret: _config.GetConfig().GOOGLE_AUTH_SECRET,
+		RedirectURL:  "https://movie-ticketing-test.herokuapp.com/api/v1/auth/google/callback",
 		Scopes: []string{
 			"https://www.googleapis.com/auth/userinfo.email",
 			"https://www.googleapis.com/auth/userinfo.profile",
@@ -33,9 +33,9 @@ var (
 
 var (
 	facebookOauthConfig = &oauth2.Config{
-		ClientID:     _config.GetConfig().Facebook.ClientID,
-		ClientSecret: _config.GetConfig().Facebook.Secret,
-		RedirectURL:  "http://localhost:8000/api/v1/auth/facebook/callback",
+		ClientID:     _config.GetConfig().FACEBOOK_AUTH_CLIENT,
+		ClientSecret: _config.GetConfig().FACEBOOK_AUTH_SECRET,
+		RedirectURL:  "https://movie-ticketing-test.herokuapp.com/api/v1/auth/facebook/callback",
 		Scopes:       []string{"public_profile","email"},
 		Endpoint:     facebook.Endpoint,
 	}
@@ -164,6 +164,7 @@ func (controller *UserController) HandleGoogle(c echo.Context) error {
 	return base_response.NewSuccessResponse(c, result)
 }
 
+//! OAuth2 Facebook
 func (controller *UserController) LoginFacebook(c echo.Context) error {
 	url := facebookOauthConfig.AuthCodeURL(facebookrandomstate)
 	c.Redirect(http.StatusTemporaryRedirect, url)

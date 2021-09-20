@@ -62,7 +62,7 @@ func TestRegister(t *testing.T) {
 			Password: "asyudasd820aisd",
 			Name:     "reza bintami",
 			Email:    "rezabintami@gmail.com",
-			Balance:  0,
+			Amount:  0,
 			Language: "en",
 		}
 		usersRepository.On("GetByEmail", mock.Anything, mock.Anything).Return(users.Domain{}, nil).Once()
@@ -79,7 +79,7 @@ func TestRegister(t *testing.T) {
 			Password: "asyudasd820aisd",
 			Name:     "reza bintami",
 			Email:    "rezabintami@gmail.com",
-			Balance:  0,
+			Amount:  0,
 			Language: "en",
 		}
 		errRepository := errors.New("duplicate data")
@@ -96,7 +96,7 @@ func TestRegister(t *testing.T) {
 			Password: "asyudasd820aisd",
 			Name:     "reza bintami",
 			Email:    "rezabintami@gmail.com",
-			Balance:  0,
+			Amount:  0,
 			Language: "en",
 		}
 		usersRepository.On("GetByEmail", mock.Anything, mock.Anything).Return(domain, nil).Once()
@@ -106,28 +106,12 @@ func TestRegister(t *testing.T) {
 		assert.Equal(t, err, business.ErrDuplicateData)
 	})
 
-	// t.Run("test case 4, hashing password error", func(t *testing.T) {
-	// 	domain := users.Domain{
-	// 		ID:       1,
-	// 		Password: "",
-	// 		Name:     "reza bintami",
-	// 		Email:    "rezabintami@gmail.com",
-	// 		Balance:  0,
-	// 		Language: "en",
-	// 	}
-	// 	usersRepository.On("GetByEmail", mock.Anything, mock.Anything).Return(users.Domain{}, nil).Once()
-
-	// 	err := usersUsecase.Register(context.Background(), &domain)
-
-	// 	assert.Equal(t, err, business.ErrInternalServer)
-	// })
-
 	t.Run("test case 4, register failed", func(t *testing.T) {
 		domain := users.Domain{
 			ID:       1,
 			Name:     "reza bintami",
 			Email:    "rezabintami@gmail.com",
-			Balance:  0,
+			Amount:  0,
 			Language: "en",
 		}
 		errRepository := errors.New("register failed")
@@ -147,7 +131,7 @@ func TestUpdateUser(t *testing.T) {
 			Password: "asyudasd820aisd",
 			Name:     "reza bintami",
 			Email:    "rezabintami@gmail.com",
-			Balance:  0,
+			Amount:  0,
 			Language: "en",
 		}
 		usersRepository.On("UpdateUser", mock.Anything, mock.Anything, mock.AnythingOfType("int")).Return(nil).Once()
@@ -163,7 +147,7 @@ func TestUpdateUser(t *testing.T) {
 			Password: "asyudasd820aisd",
 			Name:     "reza bintami",
 			Email:    "rezabintami@gmail.com",
-			Balance:  0,
+			Amount:  0,
 			Language: "en",
 		}
 		errRepository := errors.New("id not found")
@@ -183,7 +167,7 @@ func TestLogin(t *testing.T) {
 			Password: pass,
 			Name:     "zaza",
 			Email:    "zaza@gmail.com",
-			Balance:  0,
+			Amount:  0,
 			Language: "en",
 		}
 
@@ -199,7 +183,7 @@ func TestLogin(t *testing.T) {
 			Password: pass,
 			Name:     "zaza",
 			Email:    "zaza@gmail.com",
-			Balance:  0,
+			Amount:  0,
 			Language: "en",
 		}
 

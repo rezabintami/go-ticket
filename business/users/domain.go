@@ -10,7 +10,7 @@ type Domain struct {
 	Name      string
 	Password  string
 	Email     string
-	Balance   float64
+	Amount    float64
 	Language  string
 	Sso       bool
 	CreatedAt time.Time
@@ -18,14 +18,13 @@ type Domain struct {
 }
 
 type Usecase interface {
-	Login(ctx context.Context, email, password string,  sso bool) (string, error)
+	Login(ctx context.Context, email, password string, sso bool) (string, error)
 	Register(ctx context.Context, data *Domain, sso bool) error
 	GetByID(ctx context.Context, id int) (Domain, error)
 	UpdateUser(ctx context.Context, data *Domain, id int) error
 }
 
 type Repository interface {
-	// Login(ctx context.Context, id int) (Domain, error)
 	GetByID(ctx context.Context, id int) (Domain, error)
 	UpdateUser(ctx context.Context, data *Domain, id int) error
 	GetByEmail(ctx context.Context, email string) (Domain, error)

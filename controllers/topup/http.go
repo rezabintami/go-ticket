@@ -6,6 +6,7 @@ import (
 	"ticketing/business/topup"
 	"ticketing/controllers/topup/request"
 	"ticketing/controllers/topup/response"
+	"ticketing/helper/guid"
 	base_response "ticketing/helper/response"
 
 	echo "github.com/labstack/echo/v4"
@@ -21,20 +22,39 @@ func NewTopUpController(tc topup.Usecase) *TopUpController {
 	}
 }
 
-func (ctrl *TopUpController) Store(c echo.Context) error {
+func (ctrl *TopUpController) CreateTransaction(c echo.Context) error {
 	ctx := c.Request().Context()
+	id := middleware.GetUserId(c)
 
 	req := request.TopUp{}
 	if err := c.Bind(&req); err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	err := ctrl.topupUsecase.Store(ctx, req.ToDomain())
+	req.OrderID = guid.GenerateUUID()
+
+	resp, err := ctrl.topupUsecase.CreateTransactions(ctx, req.ToDomain(), id)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
 	}
 
-	return base_response.NewSuccessInsertResponse(c, "Successfully insert topup")
+	return base_response.NewSuccessResponse(c, response.FromPaymentDomain(resp))
+}
+
+func (ctrl *TopUpController) TransactionCallbackHandler(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	req := request.MidtransCallback{}
+	if err := c.Bind(&req); err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+	
+	err := ctrl.topupUsecase.Update(ctx, req.HandlerToDomain())
+	if err != nil {
+		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
+	}
+
+	return base_response.NewSuccessResponse(c, "Successfully")
 }
 
 func (ctrl *TopUpController) GetByID(c echo.Context) error {

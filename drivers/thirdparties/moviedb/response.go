@@ -4,20 +4,6 @@ import (
 	"ticketing/business/moviedb"
 )
 
-// type Response struct {
-// 	Results []Result `json:"results"`
-// }
-
-// type Result struct {
-// 	ID          int    `json:"id"`
-// 	Title       string `json:"original_title"`
-// 	Language    string `json:"original_language"`
-// 	Description string `json:"overview"`
-// 	Path        string `json:"poster_path"`
-// 	VoteAverage string `json:"vote_average"`
-// 	VoteCount   string `json:"vote_count"`
-// }
-
 type Response struct {
 	Result []struct {
 		ID          int64   `json:"id"`
