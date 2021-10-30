@@ -24,11 +24,43 @@ func NewMySQLTheaterRepository(conn *gorm.DB, redis *redis.Client) theater.Repos
 }
 
 func (repository *mysqlTheaterRepository) Store(ctx context.Context, theaterDomain *theater.Domain) error {
+	//! SAVE TO DB
 	rec := fromDomain(*theaterDomain)
 
 	result := repository.Conn.Create(rec)
 	if result.Error != nil {
 		return result.Error
+	}
+
+	//! SAVE TO REDIS
+	var recFind []Theater
+	var allTheater []theater.Domain
+
+	result2 := repository.Conn.Find(&recFind)
+	if result2.Error != nil {
+		return result2.Error
+	}
+
+	for _, value := range recFind {
+		allTheater = append(allTheater, value.toDomain())
+	}
+
+	val, err := converter.ConvertStructToString(allTheater)
+	if err != nil {
+		fmt.Println("cannot marshal struct to string")
+	}
+
+	value, err := repository.Redis.Get("GetAll_Theater").Result()
+	
+	if val != value {
+		err = repository.Redis.Set("GetAll_Theater", val, 0).Err()
+		if err != nil {
+			fmt.Println("Redis error set: ", err)
+		}
+
+		return nil
+	} else if err != nil {
+		fmt.Println("Redis error get: ", err)
 	}
 
 	return nil
@@ -56,33 +88,10 @@ func (repository *mysqlTheaterRepository) Update(ctx context.Context, theaterDom
 }
 
 func (repository *mysqlTheaterRepository) GetAll(ctx context.Context) ([]theater.Domain, error) {
-	var rec []Theater
 	var allTheater []theater.Domain
-
-	result := repository.Conn.Find(&rec)
-	if result.Error != nil {
-		return []theater.Domain{}, result.Error
-	}
-
-	for _, value := range rec {
-		allTheater = append(allTheater, value.toDomain())
-	}
-
-	val, err := converter.ConvertStructToString(allTheater)
-	if err != nil {
-		fmt.Println("cannot marshal struct to string")
-	}
-
+	
 	value, err := repository.Redis.Get("GetAll_Theater").Result()
-
-	if val != value {
-		err = repository.Redis.Set("GetAll_Theater", val, 0).Err()
-		if err != nil {
-			fmt.Println("Redis error set: ", err)
-		}
-
-		return allTheater, nil
-	} else if err != nil {
+	if err != nil {
 		fmt.Println("Redis error get: ", err)
 	}
 	json.Unmarshal([]byte(value), &allTheater)
