@@ -1,121 +1,29 @@
-# Ticketing API
+## Ticketing
 
-## Login
+`Ticketing` is a simulation of buying a cinema ticket. With this simulation, users can find out about cinema films around the world. users can make purchases and can find out details of cinema tickets around the world.
 
-`POST :`
+## Architecture
 
-```sh
-https://localhost:8000/api/v1/login
-```
+- Language [GoLang](https://golang.org/)
+- Framework [Framework Echo](https://echo.labstack.com/)
+- Object Relational Mapping [Gorm io](https://gorm.io/docs/index.html)
+- Facebook OAuth2
+- Google OAuth2
+- MysqlDB
+- Redis [Redis](https://app.redislabs.com)
+- MidTrans [MidTrans](https://midtrans.com/)
+- JWT [JWT](https://github.com/dgrijalva/jwt-go)
+- Log [Logrus](https://github.com/sirupsen/logrus)
+- Open API [TheMovieDB](https://www.themoviedb.org/)
 
-## Register
+## Deployed
 
-`POST :`
+This project has deployed on [`Ticketing`](https://movie-ticketing-test.herokuapp.com/)
 
-```sh
-https://localhost:8000/api/v1/register
-```
+## API
 
-## TopUp
+Open and run `swagger.yaml`
 
-`POST :`
+## Lisence
 
-```sh
-https://localhost:8000/api/v1/topup
-```
-
-## TopUp History
-
-`GET :`
-
-```sh
-https://localhost:8000/api/v1/topup
-```
-
-## Tickets History
-
-`GET :`
-
-```sh
-https://localhost:8000/api/v1/tickets
-```
-
-## Create Ticket
-
-`POST :`
-
-```sh
-https://localhost:8000/api/v1/tickets
-```
-
-## Delete Ticket
-
-`DELETE :`
-
-```sh
-https://localhost:8000/api/v1/tickets/{ticket_id}
-```
-
-## Get Detail Movies
-
-`GET :`
-
-```sh
-https://localhost:8000/api/v1/movies/{movie_id}
-```
-
-## Fetch Movies
-
-`GET :`
-
-```sh
-https://localhost:8000/api/v1/movies/?search=example
-```
-
-## Get All Theater
-
-`GET :`
-
-```sh
-https://localhost:8000/api/v1/theater
-```
-
-## Create Theater
-
-`POST :`
-
-```sh
-https://localhost:8000/api/v1/theater
-```
-
-## Update Theater
-
-`PUT :`
-
-```sh
-https://localhost:8000/api/v1/theater
-```
-
-## Delete Theater
-
-`DELETE :`
-
-```sh
-https://localhost:8000/api/v1/theater/{theater_id}
-```
-
-## Get Profile
-
-`GET :`
-
-```sh
-https://localhost:8000/api/v1/users
-```
-
-## Update Profile
-
-`UPDATE :`
-
-```sh
-https://localhost:/api/v1/users
-```
+Open Source
