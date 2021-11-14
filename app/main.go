@@ -27,6 +27,7 @@ import (
 
 	_config "ticketing/app/config"
 	_dbMysqlDriver "ticketing/drivers/mysql"
+	_dbRedisDriver "ticketing/drivers/redis"
 
 	_middleware "ticketing/app/middleware"
 	_routes "ticketing/app/routes"
@@ -53,11 +54,25 @@ func main() {
 	// 	DB_Port:     configApp.MONGO_DB_PORT,
 	// 	DB_Database: configApp.MONGO_DB_NAME,
 	// }
+	redisConfig := _dbRedisDriver.ConfigRedis{
+		REDIS_ENDPOINT: configApp.REDIS_ENDPOINT,
+		REDIS_PASSWORD: configApp.REDIS_PASSWORD,
+	}
 	fmt.Println("DEBUG : ", configApp.Debug)
 	fmt.Println("MYSQL : ", configApp.MYSQL_DB_USER)
 	fmt.Println("PORT : ", configApp.SERVER_PORT)
 	fmt.Println("TIMEOUT : ", configApp.SERVER_TIMEOUT)
+	fmt.Println("REDIS_ENDPOINT : ", configApp.REDIS_ENDPOINT)
+	fmt.Println("REDIS_PASSWORD : ", configApp.REDIS_PASSWORD)
+
 	mysql_db := mysqlConfigDB.InitialMysqlDB()
+	redis_db := redisConfig.InitialRedis()
+
+	pong, err := redis_db.Ping().Result()
+	if err != nil {
+		log.Fatal("DefaultConfig", "", fmt.Sprintf("Redis ping status: %s %s", pong, err))
+	}
+	fmt.Println("Redis ping status print: "+pong, err)
 	// _ = mongoConfigDB.InitMongoDB()
 
 	configJWT := _middleware.ConfigJWT{
@@ -78,7 +93,7 @@ func main() {
 	topupUsecase := _topupUsecase.NewTopUpUsecase(topupRepo, timeoutContext, userRepo, MidtransRepo)
 	topupCtrl := _topupController.NewTopUpController(topupUsecase)
 
-	theaterRepo := _theaterRepo.NewMySQLTheaterRepository(mysql_db)
+	theaterRepo := _theaterRepo.NewMySQLTheaterRepository(mysql_db, redis_db)
 	theaterUsecase := _theaterUsecase.NewTheaterUsecase(theaterRepo, timeoutContext)
 	theaterCtrl := _theaterController.NewTheaterController(theaterUsecase)
 

@@ -37,13 +37,17 @@ type Config struct {
 	FACEBOOK_AUTH_SECRET string `mapstructure:"FACEBOOK_AUTH_SECRET"`
 
 	//! MIDTRANS
-	MIDTRANS_SERVER_KEY string `mapstructure:"MIDTRANS_SERVER_KEY"`
-	MIDTRANS_CLIENT_KEY string `mapstructure:"MIDTRANS_CLIENT_KEY"`
+	MIDTRANS_SERVER_KEY  string `mapstructure:"MIDTRANS_SERVER_KEY"`
+	MIDTRANS_CLIENT_KEY  string `mapstructure:"MIDTRANS_CLIENT_KEY"`
 	MIDTRANS_MERCHANT_ID string `mapstructure:"MIDTRANS_MERCHANT_ID"`
 
 	//! JWT
-	JWT_SECRET string `mapstructure:"JWT_SECRET"`
-	JWT_EXPIRED int `mapstructure:"JWT_EXPIRED"`
+	JWT_SECRET  string `mapstructure:"JWT_SECRET"`
+	JWT_EXPIRED int    `mapstructure:"JWT_EXPIRED"`
+
+	//! REDIS
+	REDIS_ENDPOINT string `mapstructure:"REDIS_ENDPOINT"`
+	REDIS_PASSWORD string `mapstructure:"REDIS_PASSWORD"`
 }
 
 func GetConfig() Config {
@@ -84,7 +88,10 @@ func GetConfig() Config {
 		conf.MIDTRANS_MERCHANT_ID = os.Getenv("MIDTRANS_MERCHANT_ID")
 
 		conf.JWT_SECRET = os.Getenv("JWT_SECRET")
-		conf.JWT_EXPIRED,_ = strconv.Atoi(os.Getenv("JWT_EXPIRED"))
+		conf.JWT_EXPIRED, _ = strconv.Atoi(os.Getenv("JWT_EXPIRED"))
+
+		conf.REDIS_ENDPOINT = os.Getenv("REDIS_ENDPOINT")
+		conf.REDIS_PASSWORD = os.Getenv("REDIS_PASSWORD")
 	}
 
 	if err := viper.Unmarshal(&conf); err != nil {
