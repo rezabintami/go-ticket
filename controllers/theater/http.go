@@ -41,11 +41,6 @@ func (ctrl *TheaterController) Delete(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	ctx := c.Request().Context()
 
-	req := request.Theater{}
-	if err := c.Bind(&req); err != nil {
-		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
-	}
-
 	err := ctrl.theaterUsecase.Delete(ctx, id)
 	if err != nil {
 		return base_response.NewErrorResponse(c, http.StatusBadRequest, err)
