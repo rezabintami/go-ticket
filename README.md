@@ -28,6 +28,6 @@ This project don't have `Frontend`
 
 Open and run `swagger.yaml`
 
-## Lisence
+## License
 
 Open Source
